@@ -39,7 +39,7 @@ export default defineConfig({
     sourcemap: true,
     rollupOptions: {
       input: {
-        admin: path.resolve(__dirname, 'src/admin/index.tsx'),
+        admin: path.resolve(__dirname, 'src/admin/index.ts'),
       },
       treeshake: {
         moduleSideEffects: false,
