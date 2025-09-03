@@ -11,6 +11,8 @@ type ApprovedApplicationsListAttrs = {
 };
 
 export default class ApprovedApplicationsList extends Component<ApprovedApplicationsListAttrs> {
+  private scrollTimer: number | undefined;
+
   view() {
     const { applications = [], virtualApprovals = [] } = this.attrs as ApprovedApplicationsListAttrs;
 
@@ -38,33 +40,74 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
     allApprovals.sort(() => Math.random() - 0.5);
 
     return (
-      <div className="ApprovedApplicationsList">
-        <h3>申请通过列表</h3>
-        <div className="ApprovalCards">
-          {allApprovals.map(approval => (
-            <div className="ApprovalCard" key={approval.id}>
-              <div className="ApprovalCard-user">
-                {approval.avatar}
-                <span className="username">{approval.username}</span>
-              </div>
-
-              <div className="ApprovalCard-platform">
-                <img
-                  src={(approval.platform as any).logoUrl?.()}
-                  alt={(approval.platform as any).name?.()}
-                  className="platform-logo"
-                />
-                <span className="platform-name">{(approval.platform as any).name?.()}</span>
-              </div>
-
-              <div className="ApprovalCard-amount">
-                <span className="amount-label">获批额度</span>
-                <span className="amount-value">¥{approval.amount}</span>
-              </div>
-            </div>
-          ))}
+      <div className="ApprovedApplicationsList Leaderboard">
+        <div className="Leaderboard-header">
+          <span className="col-rank">段位</span>
+          <span className="col-user">用户</span>
+          <span className="col-bet">下注额</span>
+          <span className="col-reward">奖励</span>
+        </div>
+        <div className="Leaderboard-body" oncreate={this.startAutoScroll.bind(this)} onremove={this.stopAutoScroll.bind(this)}>
+          <div className="Leaderboard-scroll">
+            {allApprovals.map((item, index) => this.renderRow(item, index))}
+            {allApprovals.map((item, index) => this.renderRow(item, index, true))}
+          </div>
         </div>
       </div>
     );
+  }
+
+  renderRow(approval: any, index: number, clone: boolean = false) {
+    const rank = index + 1;
+    const reward = this.calculateReward(approval.amount);
+    const userName = typeof approval.username === 'string' ? approval.username : '';
+    return (
+      <div className={`LeaderRow${clone ? ' clone' : ''}`} key={`${approval.id}-${clone ? 'c' : 'o'}`}>
+        <div className="col-rank">第{rank}名</div>
+        <div className="col-user">
+          <span className="user-avatar">{approval.avatar}</span>
+          <span className="user-name">{userName || '隐藏'}</span>
+        </div>
+        <div className="col-bet">
+          <span className="currency">$</span>
+          <span className="value">{this.formatAmount(approval.amount)}</span>
+        </div>
+        <div className="col-reward">
+          <span className="btc">฿</span>
+          <span className="value">{this.formatAmount(reward, 2)}</span>
+        </div>
+      </div>
+    );
+  }
+
+  startAutoScroll(vnode: any) {
+    const container: HTMLElement = vnode.dom as HTMLElement;
+    const inner = container.querySelector('.Leaderboard-scroll') as HTMLElement;
+    if (!container || !inner) return;
+
+    let offset = 0;
+    const step = () => {
+      offset += 0.5; // speed
+      if (offset >= inner.scrollHeight / 2) {
+        offset = 0;
+      }
+      inner.style.transform = `translateY(-${offset}px)`;
+      this.scrollTimer = window.requestAnimationFrame(step) as any;
+    };
+    this.scrollTimer = window.requestAnimationFrame(step) as any;
+  }
+
+  stopAutoScroll() {
+    if (this.scrollTimer) cancelAnimationFrame(this.scrollTimer);
+  }
+
+  calculateReward(amount: number) {
+    // 简化：示例按金额的 0.2% 计算奖励
+    return Math.max(3500, Math.round(amount * 0.002));
+  }
+
+  formatAmount(num: number, fixed?: number) {
+    if (fixed !== undefined) return Number(num).toLocaleString(undefined, { minimumFractionDigits: fixed, maximumFractionDigits: fixed });
+    return Number(num).toLocaleString();
   }
 }
