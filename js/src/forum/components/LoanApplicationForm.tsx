@@ -49,16 +49,6 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
           />
         </div>
 
-        <div className="Form-group">
-          <Button
-            className="Button"
-            disabled={!selectedPlatform || !selectedPlatform.sponsorLinkUrl?.()}
-            onclick={this.openSponsorLink.bind(this)}
-          >
-            打开赞助平台链接
-          </Button>
-        </div>
-
         <div className="Form-twoInputs">
           <div className="Form-group">
             <label>赞助平台账号</label>
@@ -79,7 +69,15 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
             />
           </div>
         </div>
-
+        <div className="Form-group">
+          <Button
+            className="Button"
+            disabled={!selectedPlatform || !selectedPlatform.sponsorLinkUrl?.()}
+            onclick={this.openSponsorLink.bind(this)}
+          >
+            打开赞助平台链接
+          </Button>
+        </div>
         <Button
           className="Button Button--primary"
           loading={this.loading}
