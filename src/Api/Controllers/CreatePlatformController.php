@@ -22,6 +22,7 @@ class CreatePlatformController extends AbstractCreateController
 
         $name = (string) Arr::get($data, 'name');
         $logoUrl = (string) Arr::get($data, 'logoUrl');
+        $sponsorLinkUrl = (string) Arr::get($data, 'sponsorLinkUrl');
 
         if (!$name) {
             throw new \InvalidArgumentException('平台名称不能为空');
@@ -40,6 +41,7 @@ class CreatePlatformController extends AbstractCreateController
         return LoanPlatform::create([
             'name' => $name,
             'logo_url' => $logoUrl,
+            'sponsor_link_url' => $sponsorLinkUrl ?: null,
             'sort_order' => 0,
         ]);
     }

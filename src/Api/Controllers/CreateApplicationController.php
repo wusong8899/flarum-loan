@@ -33,6 +33,8 @@ class CreateApplicationController extends AbstractCreateController
             'user_id' => $actor->id,
             'platform_id' => Arr::get($data, 'platform_id'),
             'message' => Arr::get($data, 'message'),
+            'sponsor_account' => Arr::get($data, 'sponsor_account'),
+            'applicant_account' => Arr::get($data, 'applicant_account'),
             'status' => 'pending'
         ]);
     }

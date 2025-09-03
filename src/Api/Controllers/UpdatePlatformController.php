@@ -40,6 +40,14 @@ class UpdatePlatformController extends AbstractShowController
             $platform->logo_url = $logoUrl;
         }
 
+        if (Arr::has($data, 'sponsorLinkUrl')) {
+            $linkUrl = (string) Arr::get($data, 'sponsorLinkUrl');
+            if ($linkUrl && !filter_var($linkUrl, FILTER_VALIDATE_URL)) {
+                throw new \InvalidArgumentException('无效的跳转链接');
+            }
+            $platform->sponsor_link_url = $linkUrl ?: null;
+        }
+
         $platform->save();
 
         return $platform;

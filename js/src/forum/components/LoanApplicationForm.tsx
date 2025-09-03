@@ -8,12 +8,14 @@ import LoanPlatform from '../../common/models/LoanPlatform';
 
 type LoanApplicationFormAttrs = {
   platforms: LoanPlatform[];
-  onSubmit: (payload: { platform_id: string; message: string }) => Promise<void> | void;
+  onSubmit: (payload: { platform_id: string; message: string; sponsor_account?: string; applicant_account?: string }) => Promise<void> | void;
 };
 
 export default class LoanApplicationForm extends Component<LoanApplicationFormAttrs> {
   private platformId: any;
   private message: any;
+  private sponsorAccount: any;
+  private applicantAccount: any;
   private loading: boolean = false;
 
   oninit(vnode: Vnode) {
@@ -21,6 +23,8 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
 
     this.platformId = Stream('');
     this.message = Stream('');
+    this.sponsorAccount = Stream('');
+    this.applicantAccount = Stream('');
     this.loading = false;
   }
 
@@ -46,21 +50,42 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
           />
         </div>
 
+        <div className="Form-twoInputs">
+          <div className="Form-group">
+            <label>赞助平台账号</label>
+            <input
+              className="FormControl"
+              value={this.sponsorAccount()}
+              oninput={(e: InputEvent) => this.sponsorAccount((e.target as HTMLInputElement).value)}
+              placeholder="例如：平台用户名/ID"
+            />
+          </div>
+          <div className="Form-group">
+            <label>申请账号</label>
+            <input
+              className="FormControl"
+              value={this.applicantAccount()}
+              oninput={(e: InputEvent) => this.applicantAccount((e.target as HTMLInputElement).value)}
+              placeholder="例如：论坛或应用内账号"
+            />
+          </div>
+        </div>
+
         <div className="Form-group">
-          <label>留言</label>
+          <label>留言（可选）</label>
           <textarea
             className="FormControl"
             value={this.message()}
             oninput={(e: InputEvent) => this.message((e.target as HTMLTextAreaElement).value)}
-            placeholder="请输入您的留言..."
-            rows="4"
+            placeholder="请输入备注信息..."
+            rows="3"
           />
         </div>
 
         <Button
           className="Button Button--primary"
           loading={this.loading}
-          disabled={!this.platformId() || !this.message()}
+          disabled={!this.platformId() || !this.sponsorAccount() || !this.applicantAccount()}
           onclick={this.submit.bind(this)}
         >
           提交申请
@@ -77,12 +102,16 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
     try {
       await (this.attrs as LoanApplicationFormAttrs).onSubmit({
         platform_id: this.platformId(),
-        message: this.message()
+        message: this.message(),
+        sponsor_account: this.sponsorAccount(),
+        applicant_account: this.applicantAccount()
       });
 
       // 重置表单
       this.platformId('');
       this.message('');
+      this.sponsorAccount('');
+      this.applicantAccount('');
     } finally {
       this.loading = false;
     }

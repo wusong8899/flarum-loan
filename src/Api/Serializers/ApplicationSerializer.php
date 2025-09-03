@@ -15,6 +15,8 @@ class ApplicationSerializer extends AbstractSerializer
         return [
             'id' => $application->id,
             'message' => $application->message,
+            'sponsorAccount' => $application->sponsor_account,
+            'applicantAccount' => $application->applicant_account,
             'status' => $application->status,
             'approvedAmount' => $application->approved_amount,
             'createdAt' => $this->formatDate($application->created_at),

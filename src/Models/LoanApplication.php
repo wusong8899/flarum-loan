@@ -9,7 +9,7 @@ class LoanApplication extends AbstractModel
 {
     protected $table = 'loan_applications';
 
-    protected $fillable = ['user_id', 'platform_id', 'message', 'status', 'approved_amount'];
+    protected $fillable = ['user_id', 'platform_id', 'message', 'sponsor_account', 'applicant_account', 'status', 'approved_amount'];
 
     protected $dates = ['created_at', 'updated_at', 'reviewed_at'];
 

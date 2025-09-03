@@ -14,6 +14,7 @@ class PlatformSerializer extends AbstractSerializer
             'id' => $platform->id,
             'name' => $platform->name,
             'logoUrl' => $platform->logo_url,
+            'sponsorLinkUrl' => $platform->sponsor_link_url,
             'sortOrder' => $platform->sort_order,
             'createdAt' => $this->formatDate($platform->created_at),
             'updatedAt' => $this->formatDate($platform->updated_at),

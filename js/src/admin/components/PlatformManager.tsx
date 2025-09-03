@@ -17,6 +17,7 @@ class PlatformEditModal extends Modal<PlatformEditModalAttrs> {
   private name: any;
   private logoUrl: any;
   private previewError: any;
+  private linkUrl: any;
   oninit(vnode: Vnode) {
     super.oninit(vnode);
 
@@ -24,6 +25,7 @@ class PlatformEditModal extends Modal<PlatformEditModalAttrs> {
 
     this.name = Stream(platform ? platform.name() : '');
     this.logoUrl = Stream(platform ? platform.logoUrl() : '');
+    this.linkUrl = Stream(platform ? platform.sponsorLinkUrl() : '');
     this.previewError = Stream(false);
   }
 
@@ -58,6 +60,17 @@ class PlatformEditModal extends Modal<PlatformEditModalAttrs> {
             placeholder="https://example.com/logo.png"
           />
           <div className="helpText">请输入图片的完整URL地址（支持jpg、png、gif、svg格式）</div>
+        </div>
+
+        <div className="Form-group">
+          <label>赞助平台链接（可选）</label>
+          <input
+            className="FormControl"
+            type="url"
+            value={this.linkUrl()}
+            oninput={(e: InputEvent) => this.linkUrl((e.target as HTMLInputElement).value)}
+            placeholder="https://example.com/guide"
+          />
         </div>
 
         {this.logoUrl() && (
@@ -121,7 +134,8 @@ class PlatformEditModal extends Modal<PlatformEditModalAttrs> {
 
       await platform.save({
         name: this.name(),
-        logoUrl: this.logoUrl()
+        logoUrl: this.logoUrl(),
+        sponsorLinkUrl: this.linkUrl()
       });
 
       this.attrs.onSave();
