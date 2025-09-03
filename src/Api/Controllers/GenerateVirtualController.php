@@ -3,6 +3,7 @@
 namespace Wusong8899\Loan\Api\Controllers;
 
 use Flarum\Api\Controller\AbstractCreateController;
+use Wusong8899\Loan\Api\Serializers\VirtualApprovalSerializer;
 use Wusong8899\Loan\Models\LoanVirtualApproval;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ServerRequestInterface;
@@ -11,6 +12,8 @@ use Faker\Factory as Faker;
 
 class GenerateVirtualController extends AbstractCreateController
 {
+    public $serializer = VirtualApprovalSerializer::class;
+
     protected function data(ServerRequestInterface $request, Document $document)
     {
         $actor = $request->getAttribute('actor');
@@ -32,6 +35,6 @@ class GenerateVirtualController extends AbstractCreateController
             ]);
         }
 
-        return ['message' => "成功生成{$count}条虚拟数据"];
+        return $generated;
     }
 }
