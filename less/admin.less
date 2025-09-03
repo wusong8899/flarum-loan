@@ -40,15 +40,81 @@
 .ApplicationsManager .ApplicationTable,
 .PlatformManager .PlatformTable {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--body-bg);
+  border: 1px solid var(--control-border);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .ApplicationsManager .ApplicationTable th,
 .ApplicationsManager .ApplicationTable td,
 .PlatformManager .PlatformTable th,
 .PlatformManager .PlatformTable td {
-  padding: 8px 10px;
+  padding: 10px 12px;
   border-bottom: 1px solid var(--control-border);
+}
+
+.ApplicationsManager .ApplicationTable thead th,
+.PlatformManager .PlatformTable thead th {
+  background: var(--control-bg);
+  color: var(--muted-color);
+  text-align: left;
+  font-weight: 600;
+}
+
+.ApplicationsManager .ApplicationTable tbody tr:nth-child(even),
+.PlatformManager .PlatformTable tbody tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+@media (prefers-color-scheme: dark) {
+  .ApplicationsManager .ApplicationTable tbody tr:nth-child(even),
+  .PlatformManager .PlatformTable tbody tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.03);
+  }
+}
+
+.ApplicationsManager .ApplicationTable tbody tr:hover,
+.PlatformManager .PlatformTable tbody tr:hover {
+  background-color: var(--control-bg);
+}
+
+.ApplicationsManager .ApplicationTable tbody tr:last-child td,
+.PlatformManager .PlatformTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.ApplicationsManager .ApplicationTable td .Button,
+.PlatformManager .PlatformTable td .Button {
+  margin-right: 8px;
+}
+
+.PlatformManager .PlatformTable td img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  background: #fff;
+  padding: 2px;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.ApplicationsManager .ApplicationsManager-header,
+.PlatformManager .PlatformManager-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.ApplicationsManager .ApplicationsManager-header h3,
+.PlatformManager .PlatformManager-header h3 {
+  margin: 0;
+  font-size: 18px;
 }
 
 
