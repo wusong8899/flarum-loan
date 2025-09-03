@@ -216,6 +216,14 @@ export default class PlatformManager extends Component {
                     >
                       删除
                     </Button>
+                    {platform.sponsorLinkUrl?.() && (
+                      <Button
+                        className="Button Button--link"
+                        onclick={() => window.open(platform.sponsorLinkUrl(), '_blank')}
+                      >
+                        打开赞助链接
+                      </Button>
+                    )}
                     <Button
                       className="Button Button--link"
                       onclick={() => this.generateVirtual(platform)}

@@ -5,6 +5,7 @@ namespace Wusong8899\Loan\Api\Serializers;
 use Flarum\Api\Serializer\AbstractSerializer;
 use Flarum\Api\Serializer\BasicUserSerializer;
 use Wusong8899\Loan\Api\Serializers\PlatformSerializer;
+use Tobscure\JsonApi\Relationship;
 
 class ApplicationSerializer extends AbstractSerializer
 {
@@ -14,7 +15,6 @@ class ApplicationSerializer extends AbstractSerializer
     {
         return [
             'id' => $application->id,
-            'message' => $application->message,
             'sponsorAccount' => $application->sponsor_account,
             'applicantAccount' => $application->applicant_account,
             'status' => $application->status,
@@ -24,12 +24,12 @@ class ApplicationSerializer extends AbstractSerializer
         ];
     }
 
-    protected function user($application)
+    protected function user($application): Relationship
     {
         return $this->hasOne($application, BasicUserSerializer::class);
     }
 
-    protected function platform($application)
+    protected function platform($application): Relationship
     {
         return $this->hasOne($application, PlatformSerializer::class);
     }

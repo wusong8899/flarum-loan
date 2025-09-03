@@ -57,7 +57,7 @@ export default class LoanApplicationPage extends Component {
     );
   }
 
-  async submitApplication(payload: { platform_id: string; message: string }): Promise<void> {
+  async submitApplication(payload: { platform_id: string; sponsor_account?: string; applicant_account?: string }): Promise<void> {
     await app.request({
       method: 'POST',
       url: app.forum.attribute('apiUrl') + '/loan-applications',

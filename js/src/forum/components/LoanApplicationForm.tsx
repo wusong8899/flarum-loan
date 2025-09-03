@@ -8,12 +8,11 @@ import LoanPlatform from '../../common/models/LoanPlatform';
 
 type LoanApplicationFormAttrs = {
   platforms: LoanPlatform[];
-  onSubmit: (payload: { platform_id: string; message: string; sponsor_account?: string; applicant_account?: string }) => Promise<void> | void;
+  onSubmit: (payload: { platform_id: string; sponsor_account?: string; applicant_account?: string }) => Promise<void> | void;
 };
 
 export default class LoanApplicationForm extends Component<LoanApplicationFormAttrs> {
   private platformId: any;
-  private message: any;
   private sponsorAccount: any;
   private applicantAccount: any;
   private loading: boolean = false;
@@ -22,7 +21,6 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
     super.oninit(vnode);
 
     this.platformId = Stream('');
-    this.message = Stream('');
     this.sponsorAccount = Stream('');
     this.applicantAccount = Stream('');
     this.loading = false;
@@ -30,6 +28,7 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
 
   view() {
     const platforms = (this.attrs as LoanApplicationFormAttrs).platforms || [];
+    const selectedPlatform = platforms.find((p: LoanPlatform) => String(p.id()) === this.platformId());
 
     return (
       <div className="LoanApplicationForm">
@@ -48,6 +47,16 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
               return options;
             }, {})}
           />
+        </div>
+
+        <div className="Form-group">
+          <Button
+            className="Button"
+            disabled={!selectedPlatform || !selectedPlatform.sponsorLinkUrl?.()}
+            onclick={this.openSponsorLink.bind(this)}
+          >
+            打开赞助平台链接
+          </Button>
         </div>
 
         <div className="Form-twoInputs">
@@ -71,17 +80,6 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
           </div>
         </div>
 
-        <div className="Form-group">
-          <label>留言（可选）</label>
-          <textarea
-            className="FormControl"
-            value={this.message()}
-            oninput={(e: InputEvent) => this.message((e.target as HTMLTextAreaElement).value)}
-            placeholder="请输入备注信息..."
-            rows="3"
-          />
-        </div>
-
         <Button
           className="Button Button--primary"
           loading={this.loading}
@@ -102,18 +100,25 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
     try {
       await (this.attrs as LoanApplicationFormAttrs).onSubmit({
         platform_id: this.platformId(),
-        message: this.message(),
         sponsor_account: this.sponsorAccount(),
         applicant_account: this.applicantAccount()
       });
 
       // 重置表单
       this.platformId('');
-      this.message('');
       this.sponsorAccount('');
       this.applicantAccount('');
     } finally {
       this.loading = false;
+    }
+  }
+
+  openSponsorLink() {
+    const platforms = (this.attrs as LoanApplicationFormAttrs).platforms || [];
+    const platform = platforms.find((p: LoanPlatform) => String(p.id()) === this.platformId());
+    const url = platform && platform.sponsorLinkUrl ? platform.sponsorLinkUrl() : null;
+    if (url) {
+      window.open(url, '_blank');
     }
   }
 }

@@ -3,7 +3,6 @@ import User from 'flarum/common/models/User';
 import LoanPlatform from './LoanPlatform';
 
 export default class LoanApplication extends Model {
-  message = Model.attribute<string>('message');
   sponsorAccount = Model.attribute<string>('sponsorAccount');
   applicantAccount = Model.attribute<string>('applicantAccount');
   status = Model.attribute<string>('status');
