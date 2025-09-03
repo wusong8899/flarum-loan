@@ -35,6 +35,7 @@ class GenerateVirtualController extends AbstractCreateController
             ]);
         }
 
-        return $generated;
+        // AbstractCreateController expects a single resource. Return the last created one.
+        return end($generated) ?: null;
     }
 }
