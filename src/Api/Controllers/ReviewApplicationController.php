@@ -29,8 +29,12 @@ class ReviewApplicationController extends AbstractShowController
         $application->reviewed_at = Carbon::now();
 
         if ($application->status === 'approved') {
-            // 生成随机金额
-            $application->approved_amount = rand(18, 88888);
+            $amount = Arr::get($data, 'approved_amount');
+            if ($amount !== null) {
+                $application->approved_amount = (int) $amount;
+            }
+        } else if ($application->status === 'rejected') {
+            $application->approved_amount = null;
         }
 
         $application->save();

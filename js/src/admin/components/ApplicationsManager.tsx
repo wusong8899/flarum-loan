@@ -72,10 +72,26 @@ export default class ApplicationsManager extends Component {
   }
 
   async review(appModel: LoanApplication, status: 'approved' | 'rejected'): Promise<void> {
+    const attrs: any = { status };
+
+    if (status === 'approved') {
+      const defaultValue = appModel.approvedAmount?.() ? String(appModel.approvedAmount()) : '';
+      const input = prompt('请输入批准额度（整数）', defaultValue);
+      if (input === null) return; // cancelled
+      const amount = parseInt(input, 10);
+      if (isNaN(amount) || amount < 0) {
+        alert('请输入有效的非负整数');
+        return;
+      }
+      attrs.approved_amount = amount;
+    } else {
+      attrs.approved_amount = null;
+    }
+
     await app.request({
       method: 'PATCH',
       url: `${app.forum.attribute('apiUrl')}/loan-applications/${appModel.id()}`,
-      body: { data: { attributes: { status } } }
+      body: { data: { attributes: attrs } }
     });
     await this.load();
   }
