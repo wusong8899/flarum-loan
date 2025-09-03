@@ -40,6 +40,8 @@ export default class ApplicationsManager extends Component {
               <tr>
                 <th>用户</th>
                 <th>平台</th>
+                <th>赞助账号</th>
+                <th>申请账号</th>
                 <th>留言</th>
                 <th>状态</th>
                 <th>批准额度</th>
@@ -51,12 +53,15 @@ export default class ApplicationsManager extends Component {
                 <tr key={appModel.id()}>
                   <td>{(appModel.user() && (appModel.user() as any).displayName) ? (appModel.user() as any).displayName() : '-'}</td>
                   <td>{(appModel.platform() && (appModel.platform() as any).name) ? (appModel.platform() as any).name() : '-'}</td>
+                  <td>{appModel.sponsorAccount?.() || '-'}</td>
+                  <td>{appModel.applicantAccount?.() || '-'}</td>
                   <td>{appModel.message()}</td>
                   <td>{appModel.status()}</td>
                   <td>{appModel.approvedAmount() || '-'}</td>
                   <td>
                     <Button className="Button Button--link" onclick={() => this.review(appModel, 'approved')}>通过</Button>
                     <Button className="Button Button--link" onclick={() => this.review(appModel, 'rejected')}>拒绝</Button>
+                    <Button className="Button Button--link" onclick={() => this.openSponsorLink(appModel)}>赞助链接</Button>
                     <Button className="Button Button--link" onclick={() => this.remove(appModel)}>删除</Button>
                   </td>
                 </tr>
@@ -81,6 +86,16 @@ export default class ApplicationsManager extends Component {
     if (!confirm('确定删除该申请吗？')) return;
     await appModel.delete();
     await this.load();
+  }
+
+  openSponsorLink(appModel: LoanApplication) {
+    const platform = appModel.platform() as any;
+    const url = platform && platform.sponsorLinkUrl ? platform.sponsorLinkUrl() : null;
+    if (url) {
+      window.open(url, '_blank');
+    } else {
+      app.alerts.show({ type: 'warning' }, '该平台未配置赞助平台链接');
+    }
   }
 }
 
