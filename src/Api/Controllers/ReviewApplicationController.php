@@ -2,6 +2,7 @@
 
 namespace Wusong8899\Loan\Api\Controllers;
 
+use Carbon\Carbon;
 use Flarum\Api\Controller\AbstractShowController;
 use Wusong8899\Loan\Api\Serializers\ApplicationSerializer;
 use Wusong8899\Loan\Models\LoanApplication;
@@ -25,7 +26,7 @@ class ReviewApplicationController extends AbstractShowController
 
         $application->status = Arr::get($data, 'status');
         $application->reviewed_by = $actor->id;
-        $application->reviewed_at = now();
+        $application->reviewed_at = Carbon::now();
 
         if ($application->status === 'approved') {
             // 生成随机金额
