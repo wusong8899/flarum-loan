@@ -58,6 +58,13 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
               oninput={(e: InputEvent) => this.sponsorAccount((e.target as HTMLInputElement).value)}
               placeholder="例如：平台用户名/ID"
             />
+            <Button
+              className="Button"
+              disabled={!selectedPlatform || !selectedPlatform.sponsorLinkUrl?.()}
+              onclick={this.openSponsorLink.bind(this)}
+            >
+              打开赞助平台链接
+            </Button>
           </div>
           <div className="Form-group">
             <label>申请账号</label>
@@ -67,25 +74,16 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
               oninput={(e: InputEvent) => this.applicantAccount((e.target as HTMLInputElement).value)}
               placeholder="例如：论坛或应用内账号"
             />
+            <Button
+              className="Button Button--primary"
+              loading={this.loading}
+              disabled={!this.platformId() || !this.sponsorAccount() || !this.applicantAccount()}
+              onclick={this.submit.bind(this)}
+            >
+              提交申请
+            </Button>
           </div>
         </div>
-        <div className="Form-group">
-          <Button
-            className="Button"
-            disabled={!selectedPlatform || !selectedPlatform.sponsorLinkUrl?.()}
-            onclick={this.openSponsorLink.bind(this)}
-          >
-            打开赞助平台链接
-          </Button>
-        </div>
-        <Button
-          className="Button Button--primary"
-          loading={this.loading}
-          disabled={!this.platformId() || !this.sponsorAccount() || !this.applicantAccount()}
-          onclick={this.submit.bind(this)}
-        >
-          提交申请
-        </Button>
       </div>
     );
   }
