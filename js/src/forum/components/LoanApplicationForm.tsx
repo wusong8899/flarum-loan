@@ -102,6 +102,7 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
                   (this.myApplications as LoanApplication[])
                     .filter((a) => !!a)
                     .map((appModel: LoanApplication) => this.renderOrderRow(appModel))
+                    .filter((row) => row !== null) // 过滤掉renderOrderRow返回的null值
                 ) : (
                   <div className="OrderList-empty">暂无记录</div>
                 )}
@@ -148,7 +149,12 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
 
   async loadMyApplications(): Promise<void> {
     try {
-      this.myApplications = await app.store.find('loan-applications') as any;
+      const result = await app.store.find('loan-applications') as any;
+      // 确保结果是数组，过滤掉任何null/undefined值
+      this.myApplications = Array.isArray(result) ? result.filter(app => app != null) : [];
+    } catch (error) {
+      console.error('Failed to load loan applications:', error);
+      this.myApplications = [];
     } finally {
       this.listLoading = false;
       m.redraw();
@@ -156,14 +162,19 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
   }
 
   private renderOrderRow(appModel: LoanApplication) {
-    const platform = appModel.platform() as any;
+    // 添加null检查防止TypeError
+    if (!appModel) {
+      return null;
+    }
+
+    const platform = appModel.platform ? appModel.platform() : null;
     const platformName = platform && platform.name ? platform.name() : '-';
     const platformLogo = platform && platform.logoUrl ? platform.logoUrl() : '';
     const currencyImg = platform && platform.currencyImageUrl ? platform.currencyImageUrl() : '';
 
     const sponsor = appModel.sponsorAccount?.() || '-';
     const applicant = appModel.applicantAccount?.() || '-';
-    const statusText = this.statusText(appModel.status());
+    const statusText = this.statusText(appModel.status ? appModel.status() : undefined);
     const amount = appModel.approvedAmount?.();
 
     return (

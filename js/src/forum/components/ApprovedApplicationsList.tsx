@@ -16,24 +16,33 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
   view() {
     const { applications = [], virtualApprovals = [] } = this.attrs as ApprovedApplicationsListAttrs;
 
-    // 合并真实和虚拟数据
+    // 合并真实和虚拟数据，添加null检查
     const allApprovals = [
-      ...applications.map((app: LoanApplication) => ({
-        type: 'real',
-        id: app.id(),
-        username: username((app.user() || null) as any) || '',
-        avatar: (avatar((app.user() || null) as any) as any) || null,
-        platform: app.platform() as any,
-        amount: app.approvedAmount()
-      })),
-      ...virtualApprovals.map((va: LoanVirtualApproval) => ({
-        type: 'virtual',
-        id: va.id(),
-        username: va.fakeUsername() || '',
-        avatar: <img src={va.fakeAvatarUrl()} className="Avatar" />,
-        platform: va.platform(),
-        amount: va.amount()
-      }))
+      ...applications
+        .filter((app: LoanApplication) => app != null && app.id && app.approvedAmount) // 过滤null和无效数据
+        .map((app: LoanApplication) => {
+          const user = app.user ? app.user() : null;
+          const platform = app.platform ? app.platform() : null;
+
+          return {
+            type: 'real',
+            id: app.id(),
+            username: username(user as any) || '',
+            avatar: (avatar(user as any) as any) || null,
+            platform: platform,
+            amount: app.approvedAmount()
+          };
+        }),
+      ...virtualApprovals
+        .filter((va: LoanVirtualApproval) => va != null && va.id && va.amount) // 过滤null和无效数据
+        .map((va: LoanVirtualApproval) => ({
+          type: 'virtual',
+          id: va.id(),
+          username: va.fakeUsername ? va.fakeUsername() : '',
+          avatar: va.fakeAvatarUrl ? <img src={va.fakeAvatarUrl()} className="Avatar" /> : null,
+          platform: va.platform ? va.platform() : null,
+          amount: va.amount()
+        }))
     ];
 
     // 随机排序

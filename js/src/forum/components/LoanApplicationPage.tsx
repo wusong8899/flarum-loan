@@ -26,9 +26,22 @@ export default class LoanApplicationPage extends Component {
 
   async loadData(): Promise<void> {
     try {
-      this.platforms = await app.store.find('loan-platforms') as any;
-      this.approvedApplications = await app.store.find('loan-applications', { filter: { approved: '1' } } as any) as any;
-      this.virtualApprovals = await app.store.find('loan-virtual-approvals') as any;
+      const [platforms, approvedApps, virtualApprovals] = await Promise.all([
+        app.store.find('loan-platforms') as any,
+        app.store.find('loan-applications', { filter: { approved: '1' } } as any) as any,
+        app.store.find('loan-virtual-approvals') as any
+      ]);
+
+      // 确保所有结果都是数组，过滤掉null/undefined值
+      this.platforms = Array.isArray(platforms) ? platforms.filter(p => p != null) : [];
+      this.approvedApplications = Array.isArray(approvedApps) ? approvedApps.filter(app => app != null) : [];
+      this.virtualApprovals = Array.isArray(virtualApprovals) ? virtualApprovals.filter(v => v != null) : [];
+    } catch (error) {
+      console.error('Failed to load loan data:', error);
+      // 设置默认的空数组
+      this.platforms = [];
+      this.approvedApplications = [];
+      this.virtualApprovals = [];
     } finally {
       this.loading = false;
       m.redraw();
