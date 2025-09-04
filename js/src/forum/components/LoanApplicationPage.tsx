@@ -32,8 +32,8 @@ export default class LoanApplicationPage extends Component {
       console.log('[LoanApplicationPage] 发起并行API请求...');
       const [platforms, approvedApps, virtualApprovals] = await Promise.all([
         app.store.find('loan-platforms') as any,
-        app.store.find('loan-applications', { filter: { approved: '1' } } as any) as any,
-        app.store.find('loan-virtual-approvals') as any
+        app.store.find('loan-applications', { filter: { approved: '1' }, include: 'user,platform' } as any) as any,
+        app.store.find('loan-virtual-approvals', { include: 'platform' }) as any
       ]);
       
       console.log('[LoanApplicationPage] API返回结果:', {

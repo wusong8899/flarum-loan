@@ -164,7 +164,7 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
   async loadMyApplications(): Promise<void> {
     console.log('[LoanApplicationForm] 开始加载我的申请记录...');
     try {
-      const result = await app.store.find('loan-applications') as any;
+      const result = await app.store.find('loan-applications', { include: 'user,platform' }) as any;
       console.log('[LoanApplicationForm] API返回结果:', result);
       console.log('[LoanApplicationForm] 结果类型:', typeof result, '是否为数组:', Array.isArray(result));
 

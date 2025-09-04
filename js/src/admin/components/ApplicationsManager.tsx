@@ -17,7 +17,7 @@ export default class ApplicationsManager extends Component {
 
   async load(): Promise<void> {
     try {
-      this.applications = await app.store.find('loan-applications') as any;
+      this.applications = await app.store.find('loan-applications', { include: 'user,platform' }) as any;
     } finally {
       this.loading = false;
       m.redraw();

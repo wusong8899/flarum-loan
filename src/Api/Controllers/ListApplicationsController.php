@@ -11,6 +11,8 @@ use Tobscure\JsonApi\Document;
 class ListApplicationsController extends AbstractListController
 {
     public $serializer = ApplicationSerializer::class;
+    
+    public $include = ['user', 'platform'];
 
     protected function data(ServerRequestInterface $request, Document $document)
     {
