@@ -158,8 +158,8 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
   private renderOrderRow(appModel: LoanApplication) {
     const platform = appModel.platform() as any;
     const platformName = platform && platform.name ? platform.name() : '-';
-    const platformLogo = platform && platform.logoUrl ? platform.logoUrl() : null;
-    const currencyImg = platform && platform.currencyImageUrl ? platform.currencyImageUrl() : null;
+    const platformLogo = platform && platform.logoUrl ? platform.logoUrl() : '';
+    const currencyImg = platform && platform.currencyImageUrl ? platform.currencyImageUrl() : '';
 
     const sponsor = appModel.sponsorAccount?.() || '-';
     const applicant = appModel.applicantAccount?.() || '-';
