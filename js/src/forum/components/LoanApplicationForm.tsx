@@ -106,10 +106,12 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
                 <span>批准额度</span>
               </div>
               <div className="OrderList-body">
-                {this.myApplications.length === 0 ? (
-                  <div className="OrderList-empty">暂无记录</div>
+                {Array.isArray(this.myApplications) && this.myApplications.length > 0 ? (
+                  (this.myApplications as LoanApplication[])
+                    .filter((a) => !!a)
+                    .map((appModel: LoanApplication) => this.renderOrderRow(appModel))
                 ) : (
-                  this.myApplications.map((appModel: LoanApplication) => this.renderOrderRow(appModel))
+                  <div className="OrderList-empty">暂无记录</div>
                 )}
               </div>
             </div>
@@ -173,16 +175,16 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
     const amount = appModel.approvedAmount?.();
 
     return (
-      <div className="OrderList-row" key={appModel.id()}>
+      <div className="OrderList-row">
         <div className="col-platform">
           <span className="platform-logo-wrap">
             {platformLogo ? <img className="platform-logo" src={platformLogo} alt={platformName} /> : <span className="platform-logo placeholder"></span>}
           </span>
           <span className="platform-name">{platformName}</span>
         </div>
-        <div className="col-sponsor">{sponsor}</div>
-        <div className="col-applicant">{applicant}</div>
-        <div className="col-status">{statusText}</div>
+        <div className="col-sponsor">{sponsor || '-'}</div>
+        <div className="col-applicant">{applicant || '-'}</div>
+        <div className="col-status">{statusText || '-'}</div>
         <div className="col-amount">
           {typeof amount === 'number' ? (
             <span className="amount">
@@ -194,7 +196,7 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
               <span className="value">{this.formatAmount(amount)}</span>
             </span>
           ) : (
-            '-'
+            <span>-</span>
           )}
         </div>
       </div>
