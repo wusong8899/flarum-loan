@@ -265,61 +265,45 @@
   text-align: center;
 }
 
-// Custom platform select
-.PlatformSelect {
+// Custom platform selector (tournament style)
+.LoanPlatformSelector {
   position: relative;
-  width: 100%;
+  margin-bottom: 20px;
 }
-.PlatformSelect-trigger {
-  width: 100%;
+.LoanPlatformSelector-dropdown {
+  border: 1px solid var(--control-border);
+  border-radius: 6px;
+  background: var(--control-bg);
+  padding: 12px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  transition: border-color 0.2s ease;
+}
+.LoanPlatformSelector-dropdown:hover {
+  border-color: var(--control-border-color, #5b6b8c);
+}
+.LoanPlatformSelector-selected { display: flex; align-items: center; flex: 1; }
+.LoanPlatformSelector-info { display: flex; align-items: center; gap: 10px; }
+.LoanPlatformSelector-icon { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; }
+.PlatformIcon--small { width: 20px; height: 20px; font-size: 16px; }
+.PlatformIcon--medium { width: 24px; height: 24px; font-size: 20px; }
+.LoanPlatformSelector-name { font-weight: 600; }
+.LoanPlatformSelector-dropdownIcon { color: var(--muted-color); }
+.LoanPlatformSelector-dropdownMenu {
+  position: absolute; top: 100%; left: 0; right: 0;
   background: var(--body-bg);
   border: 1px solid var(--control-border);
-  border-radius: 8px;
-  padding: 8px 10px;
+  border-radius: 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  z-index: 1000; margin-top: 6px; max-height: 240px; overflow-y: auto;
 }
-.PlatformSelect .option {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+.LoanPlatformSelector-dropdownItem {
+  padding: 12px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: background-color 0.2s ease;
 }
-.PlatformSelect .logo {
-  width: 22px;
-  height: 22px;
-  object-fit: contain;
-  background: #fff;
-  border-radius: 4px;
-  padding: 2px;
-}
-.PlatformSelect-menu {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: calc(100% + 6px);
-  background: var(--body-bg);
-  border: 1px solid var(--control-border);
-  border-radius: 8px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-  z-index: 20;
-  max-height: 260px;
-  overflow: auto;
-}
-.PlatformSelect-option {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 10px;
-  cursor: pointer;
-}
-.PlatformSelect-option:hover {
-  background: var(--control-bg);
-}
-.PlatformSelect-option.is-active {
-  background: rgba(99, 102, 241, 0.08);
-}
+.LoanPlatformSelector-dropdownItem:hover { background: var(--control-bg); }
+.LoanPlatformSelector-dropdownItem + .LoanPlatformSelector-dropdownItem { border-top: 1px solid var(--control-border); }
+.LoanPlatformSelector-noData { color: var(--muted-color); cursor: default; font-style: italic; justify-content: center; }
 
 .ApprovalCards {
   display: grid;
