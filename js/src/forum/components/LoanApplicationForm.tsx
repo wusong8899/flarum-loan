@@ -2,6 +2,7 @@
 import Component from 'flarum/common/Component';
 import Button from 'flarum/common/components/Button';
 import Select from 'flarum/common/components/Select';
+import PlatformSelect from './PlatformSelect';
 import Stream from 'flarum/common/utils/Stream';
 import m,{Vnode} from 'mithril';
 import app from 'flarum/forum/app';
@@ -42,18 +43,10 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
       <div className="LoanApplicationForm">
         <div className="Form-group">
           <label>选择平台</label>
-          <Select
+          <PlatformSelect
+            platforms={platforms}
             value={this.platformId()}
             onchange={this.platformId}
-            options={platforms.reduce((options: Record<string, any>, platform: LoanPlatform) => {
-              options[String(platform.id())] = (
-                <div className="PlatformOption">
-                  <img src={platform.logoUrl()} alt={platform.name()} />
-                  <span>{platform.name()}</span>
-                </div>
-              );
-              return options;
-            }, {})}
           />
         </div>
 

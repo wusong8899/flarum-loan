@@ -265,6 +265,62 @@
   text-align: center;
 }
 
+// Custom platform select
+.PlatformSelect {
+  position: relative;
+  width: 100%;
+}
+.PlatformSelect-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--body-bg);
+  border: 1px solid var(--control-border);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+.PlatformSelect .option {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.PlatformSelect .logo {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 4px;
+  padding: 2px;
+}
+.PlatformSelect-menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+  background: var(--body-bg);
+  border: 1px solid var(--control-border);
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  z-index: 20;
+  max-height: 260px;
+  overflow: auto;
+}
+.PlatformSelect-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+.PlatformSelect-option:hover {
+  background: var(--control-bg);
+}
+.PlatformSelect-option.is-active {
+  background: rgba(99, 102, 241, 0.08);
+}
+
 .ApprovalCards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
