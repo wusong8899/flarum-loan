@@ -1,5 +1,5 @@
 import Component from 'flarum/common/Component';
-import m from 'mithril';
+import m, { VnodeDOM } from 'mithril';
 import LoanPlatform from '../../common/models/LoanPlatform';
 
 type PlatformSelectAttrs = {
@@ -11,12 +11,22 @@ type PlatformSelectAttrs = {
 export default class PlatformSelect extends Component<PlatformSelectAttrs> {
   private open = false;
 
+  oncreate(vnode: VnodeDOM) {
+    super.oncreate(vnode);
+    document.addEventListener('click', this.handleDocClick);
+  }
+
+  onremove(vnode: VnodeDOM) {
+    super.onremove(vnode);
+    document.removeEventListener('click', this.handleDocClick);
+  }
+
   view() {
     const { platforms = [], value } = this.attrs as PlatformSelectAttrs;
     const selected = platforms.find((p) => String(p.id()) === value) || null;
 
     return (
-      <div className="LoanPlatformSelector" oncreate={() => document.addEventListener('click', this.handleDocClick)} onremove={() => document.removeEventListener('click', this.handleDocClick)}>
+      <div className="LoanPlatformSelector">
         <div className="LoanPlatformSelector-dropdown" onclick={(e: MouseEvent) => { e.stopPropagation(); this.toggle(); }}>
           <div className="LoanPlatformSelector-selected">
             <div className="LoanPlatformSelector-info">
@@ -24,15 +34,15 @@ export default class PlatformSelect extends Component<PlatformSelectAttrs> {
                 {selected ? (
                   <img className="PlatformIcon PlatformIcon--medium" src={selected.logoUrl()} alt={selected.name()} />
                 ) : (
-                  <span className="PlatformIcon PlatformIcon--medium"></span>
+                  <span className="PlatformIcon PlatformIcon--medium PlatformIcon--placeholder"></span>
                 )}
               </div>
               <div className="LoanPlatformSelector-details">
                 <div className="LoanPlatformSelector-name">{selected ? selected.name() : '请选择平台'}</div>
               </div>
             </div>
+            <i className={`LoanPlatformSelector-dropdownIcon fas fa-chevron-${this.open ? 'up' : 'down'}`}></i>
           </div>
-          <i className="LoanPlatformSelector-dropdownIcon fas fa-chevron-down"></i>
         </div>
 
         {this.open && (
@@ -41,7 +51,11 @@ export default class PlatformSelect extends Component<PlatformSelectAttrs> {
               <div className="LoanPlatformSelector-dropdownItem LoanPlatformSelector-noData">暂无可选平台</div>
             ) : (
               platforms.map((p) => (
-                <div className="LoanPlatformSelector-dropdownItem" onclick={() => this.select(String(p.id()))}>
+                <div 
+                  key={p.id()}
+                  className="LoanPlatformSelector-dropdownItem" 
+                  onclick={() => this.select(String(p.id()))}
+                >
                   <div className="LoanPlatformSelector-icon">
                     <img className="PlatformIcon PlatformIcon--small" src={p.logoUrl()} alt={p.name()} />
                   </div>
@@ -57,6 +71,7 @@ export default class PlatformSelect extends Component<PlatformSelectAttrs> {
 
   private toggle() {
     this.open = !this.open;
+    m.redraw();
   }
 
   private handleDocClick = () => {
@@ -69,6 +84,7 @@ export default class PlatformSelect extends Component<PlatformSelectAttrs> {
   private select(val: string) {
     (this.attrs as PlatformSelectAttrs).onchange(val);
     this.open = false;
+    m.redraw();
   }
 }
 
