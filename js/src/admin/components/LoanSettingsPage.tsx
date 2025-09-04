@@ -53,7 +53,7 @@ export default class LoanSettingsPage extends ExtensionPage {
       });
       app.alerts.show({ type: 'success' }, '已清空申请与虚拟审批数据');
     } catch (e) {
-      app.alerts.show({ type: 'error' }, '清空失败');
+      app.alerts.show({ type: 'error' }, '清空失败 '+e);
     }
   }
 }
