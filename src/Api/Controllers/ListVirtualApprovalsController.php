@@ -12,6 +12,8 @@ class ListVirtualApprovalsController extends AbstractListController
 {
     public $serializer = VirtualApprovalSerializer::class;
 
+    public $include = ['platform'];
+
     protected function data(ServerRequestInterface $request, Document $document)
     {
         return LoanVirtualApproval::with('platform')->orderByDesc('created_at')->get();

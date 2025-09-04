@@ -28,60 +28,26 @@ export default class LoanApplicationPage extends Component {
 
     async loadData(): Promise<void> {
     console.log('[LoanApplicationPage] 开始加载页面数据...');
-    try {
-      console.log('[LoanApplicationPage] 发起并行API请求...');
-      const [platforms, approvedApps, virtualApprovals] = await Promise.all([
-        app.store.find('loan-platforms') as any,
-        app.store.find('loan-applications', { filter: { approved: '1' }, include: 'user,platform' } as any) as any,
-        app.store.find('loan-virtual-approvals', { include: 'platform' }) as any
-      ]);
-      
-      console.log('[LoanApplicationPage] API返回结果:', {
-        platforms: {
-          type: typeof platforms,
-          isArray: Array.isArray(platforms),
-          length: Array.isArray(platforms) ? platforms.length : 'N/A',
-          data: platforms
-        },
-        approvedApps: {
-          type: typeof approvedApps,
-          isArray: Array.isArray(approvedApps),
-          length: Array.isArray(approvedApps) ? approvedApps.length : 'N/A',
-          data: approvedApps
-        },
-        virtualApprovals: {
-          type: typeof virtualApprovals,
-          isArray: Array.isArray(virtualApprovals),
-          length: Array.isArray(virtualApprovals) ? virtualApprovals.length : 'N/A',
-          data: virtualApprovals
-        }
-      });
-      
-      // 确保所有结果都是数组，过滤掉null/undefined值
+    
+    console.log('[LoanApplicationPage] 发起并行API请求...');
+    
+    // 使用 Promise.allSettled 来处理各个请求，即使某个失败也不影响其他
+    const results = await Promise.allSettled([
+      app.store.find('loan-platforms') as any,
+      app.store.find('loan-applications', { filter: { approved: '1' }, include: 'user,platform' } as any) as any,
+      app.store.find('loan-virtual-approvals', { include: 'platform' }) as any
+    ]);
+    
+    // 处理平台数据
+    if (results[0].status === 'fulfilled') {
+      const platforms = results[0].value;
       this.platforms = Array.isArray(platforms) ? platforms.filter(p => {
         const isValid = p != null;
         if (!isValid) console.warn('[LoanApplicationPage] 发现null平台:', p);
         return isValid;
       }) : [];
+      console.log('[LoanApplicationPage] 平台加载成功，数量:', this.platforms.length);
       
-      this.approvedApplications = Array.isArray(approvedApps) ? approvedApps.filter(app => {
-        const isValid = app != null;
-        if (!isValid) console.warn('[LoanApplicationPage] 发现null已批准申请:', app);
-        return isValid;
-      }) : [];
-      
-      this.virtualApprovals = Array.isArray(virtualApprovals) ? virtualApprovals.filter(v => {
-        const isValid = v != null;
-        if (!isValid) console.warn('[LoanApplicationPage] 发现null虚拟批准:', v);
-        return isValid;
-      }) : [];
-
-      console.log('[LoanApplicationPage] 过滤后的数据:', {
-        platformsCount: this.platforms.length,
-        approvedAppsCount: this.approvedApplications.length,
-        virtualApprovalsCount: this.virtualApprovals.length
-      });
-
       // 详细检查每个平台
       this.platforms.forEach((platform, index) => {
         console.log(`[LoanApplicationPage] 平台 ${index}:`, {
@@ -92,18 +58,48 @@ export default class LoanApplicationPage extends Component {
           currencyImageUrl: platform.currencyImageUrl?.()
         });
       });
-
-    } catch (error) {
-      console.error('[LoanApplicationPage] 加载页面数据失败:', error);
-      // 设置默认的空数组
+    } else {
+      console.error('[LoanApplicationPage] 加载平台失败:', results[0].reason);
       this.platforms = [];
-      this.approvedApplications = [];
-      this.virtualApprovals = [];
-    } finally {
-      console.log('[LoanApplicationPage] 数据加载完成，设置loading为false');
-      this.loading = false;
-      m.redraw();
     }
+    
+    // 处理已批准申请数据
+    if (results[1].status === 'fulfilled') {
+      const approvedApps = results[1].value;
+      this.approvedApplications = Array.isArray(approvedApps) ? approvedApps.filter(app => {
+        const isValid = app != null;
+        if (!isValid) console.warn('[LoanApplicationPage] 发现null已批准申请:', app);
+        return isValid;
+      }) : [];
+      console.log('[LoanApplicationPage] 已批准申请加载成功，数量:', this.approvedApplications.length);
+    } else {
+      console.error('[LoanApplicationPage] 加载已批准申请失败:', results[1].reason);
+      this.approvedApplications = [];
+    }
+    
+    // 处理虚拟审批数据
+    if (results[2].status === 'fulfilled') {
+      const virtualApprovals = results[2].value;
+      this.virtualApprovals = Array.isArray(virtualApprovals) ? virtualApprovals.filter(v => {
+        const isValid = v != null;
+        if (!isValid) console.warn('[LoanApplicationPage] 发现null虚拟批准:', v);
+        return isValid;
+      }) : [];
+      console.log('[LoanApplicationPage] 虚拟审批加载成功，数量:', this.virtualApprovals.length);
+    } else {
+      console.error('[LoanApplicationPage] 加载虚拟审批失败:', results[2].reason);
+      this.virtualApprovals = [];
+    }
+    
+    console.log('[LoanApplicationPage] 最终数据汇总:', {
+      platformsCount: this.platforms.length,
+      approvedAppsCount: this.approvedApplications.length,
+      virtualApprovalsCount: this.virtualApprovals.length
+    });
+    
+    console.log('[LoanApplicationPage] 数据加载完成，设置loading为false');
+    this.loading = false;
+    m.redraw();
   }
 
   view() {
