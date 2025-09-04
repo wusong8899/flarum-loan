@@ -23,7 +23,10 @@ export default class PlatformSelect extends Component<PlatformSelectAttrs> {
 
   view() {
     const { platforms = [], value } = this.attrs as PlatformSelectAttrs;
-    const selected = platforms.find((p) => String(p.id()) === value) || null;
+    const list = Array.isArray(platforms)
+      ? platforms.filter((p) => p && typeof (p as any).id === 'function' && (p as any).id() != null)
+      : [];
+    const selected = list.find((p) => String(p.id()) === value) || null;
 
     return (
       <div className="LoanPlatformSelector">
@@ -47,19 +50,19 @@ export default class PlatformSelect extends Component<PlatformSelectAttrs> {
 
         {this.open && (
           <div className="LoanPlatformSelector-dropdownMenu" onclick={(e: MouseEvent) => e.stopPropagation()}>
-            {platforms.length === 0 ? (
+            {list.length === 0 ? (
               <div className="LoanPlatformSelector-dropdownItem LoanPlatformSelector-noData">暂无可选平台</div>
             ) : (
-              platforms.map((p) => (
-                <div 
-                  key={p.id()}
-                  className="LoanPlatformSelector-dropdownItem" 
-                  onclick={() => this.select(String(p.id()))}
+              list.map((p, index) => (
+                <div
+                  key={String((p as any).id() ?? index)}
+                  className="LoanPlatformSelector-dropdownItem"
+                  onclick={() => this.select(String((p as any).id()))}
                 >
                   <div className="LoanPlatformSelector-icon">
-                    <img className="PlatformIcon PlatformIcon--small" src={p.logoUrl()} alt={p.name()} />
+                    <img className="PlatformIcon PlatformIcon--small" src={(p as any).logoUrl()} alt={(p as any).name()} />
                   </div>
-                  <div className="LoanPlatformSelector-name">{p.name()}</div>
+                  <div className="LoanPlatformSelector-name">{(p as any).name()}</div>
                 </div>
               ))
             )}
