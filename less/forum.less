@@ -197,6 +197,76 @@
   border-bottom: none;
 }
 
+// Order list (您的申请订单)
+.LoanApplicationForm .MyApplications .OrderList {
+  background: var(--body-bg);
+  border: 1px solid var(--control-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.LoanApplicationForm .MyApplications .OrderList-header,
+.LoanApplicationForm .MyApplications .OrderList-row {
+  display: grid;
+  grid-template-columns: 2fr 2fr 2fr 1fr 1.2fr;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 16px;
+}
+
+.LoanApplicationForm .MyApplications .OrderList-header {
+  background: var(--control-bg);
+  color: var(--muted-color);
+  font-weight: 600;
+  border-bottom: 1px solid var(--control-border);
+}
+
+.LoanApplicationForm .MyApplications .OrderList-body .OrderList-row {
+  border-bottom: 1px solid var(--control-border);
+}
+.LoanApplicationForm .MyApplications .OrderList-body .OrderList-row:last-child {
+  border-bottom: none;
+}
+
+.LoanApplicationForm .MyApplications .OrderList-row .col-platform {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.LoanApplicationForm .MyApplications .platform-logo-wrap {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+}
+.LoanApplicationForm .MyApplications .platform-logo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 6px;
+  padding: 3px;
+}
+
+.LoanApplicationForm .MyApplications .currency {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  margin-right: 6px;
+}
+.LoanApplicationForm .MyApplications .currency-text {
+  display: inline-block;
+  margin-right: 6px;
+}
+.LoanApplicationForm .MyApplications .amount .value {
+  font-weight: 700;
+}
+
+.LoanApplicationForm .MyApplications .OrderList-empty {
+  padding: 20px;
+  text-align: center;
+}
+
 .ApprovalCards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

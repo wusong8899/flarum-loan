@@ -93,36 +93,26 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
           </div>
         </div>
         <div className="MyApplications">
-          <h3>我的申请记录</h3>
+          <h3>您的申请订单</h3>
           {this.listLoading ? (
             <div>加载中...</div>
           ) : (
-            <table className="ApplicationTable">
-              <thead>
-                <tr>
-                  <th>平台</th>
-                  <th>赞助账号</th>
-                  <th>申请账号</th>
-                  <th>状态</th>
-                  <th>批准额度</th>
-                </tr>
-              </thead>
-              <tbody>
+            <div className="OrderList">
+              <div className="OrderList-header">
+                <span>平台</span>
+                <span>赞助账号</span>
+                <span>申请账号</span>
+                <span>状态</span>
+                <span>批准额度</span>
+              </div>
+              <div className="OrderList-body">
                 {this.myApplications.length === 0 ? (
-                  <tr><td colspan="5">暂无记录</td></tr>
+                  <div className="OrderList-empty">暂无记录</div>
                 ) : (
-                  this.myApplications.map((appModel: LoanApplication) => (
-                    <tr key={appModel.id()}>
-                      <td>{(appModel.platform() && (appModel.platform() as any).name) ? (appModel.platform() as any).name() : '-'}</td>
-                      <td>{appModel.sponsorAccount?.() || '-'}</td>
-                      <td>{appModel.applicantAccount?.() || '-'}</td>
-                      <td>{appModel.status()}</td>
-                      <td>{appModel.approvedAmount() || '-'}</td>
-                    </tr>
-                  ))
+                  this.myApplications.map((appModel: LoanApplication) => this.renderOrderRow(appModel))
                 )}
-              </tbody>
-            </table>
+              </div>
+            </div>
           )}
         </div>
       </div>
@@ -169,5 +159,61 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
       this.listLoading = false;
       m.redraw();
     }
+  }
+
+  private renderOrderRow(appModel: LoanApplication) {
+    const platform = appModel.platform() as any;
+    const platformName = platform && platform.name ? platform.name() : '-';
+    const platformLogo = platform && platform.logoUrl ? platform.logoUrl() : '';
+    const currencyImg = platform && platform.currencyImageUrl ? platform.currencyImageUrl() : '';
+
+    const sponsor = appModel.sponsorAccount?.() || '-';
+    const applicant = appModel.applicantAccount?.() || '-';
+    const statusText = this.statusText(appModel.status());
+    const amount = appModel.approvedAmount?.();
+
+    return (
+      <div className="OrderList-row" key={appModel.id()}>
+        <div className="col-platform">
+          <span className="platform-logo-wrap">
+            {platformLogo ? <img className="platform-logo" src={platformLogo} alt={platformName} /> : <span className="platform-logo placeholder"></span>}
+          </span>
+          <span className="platform-name">{platformName}</span>
+        </div>
+        <div className="col-sponsor">{sponsor}</div>
+        <div className="col-applicant">{applicant}</div>
+        <div className="col-status">{statusText}</div>
+        <div className="col-amount">
+          {typeof amount === 'number' ? (
+            <span className="amount">
+              {currencyImg ? (
+                <img className="currency" src={currencyImg} alt="currency" />
+              ) : (
+                <span className="currency-text">¥</span>
+              )}
+              <span className="value">{this.formatAmount(amount)}</span>
+            </span>
+          ) : (
+            '-'
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  private statusText(status?: string) {
+    switch (status) {
+      case 'approved':
+        return '已通过';
+      case 'rejected':
+        return '已拒绝';
+      case 'pending':
+      default:
+        return '审核中';
+    }
+  }
+
+  private formatAmount(num: number) {
+    return Number(num).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 }

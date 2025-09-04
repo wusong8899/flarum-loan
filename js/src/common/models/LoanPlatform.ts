@@ -4,5 +4,6 @@ export default class LoanPlatform extends Model {
   name = Model.attribute<string>('name');
   logoUrl = Model.attribute<string>('logoUrl');
   sponsorLinkUrl = Model.attribute<string>('sponsorLinkUrl');
+  currencyImageUrl = Model.attribute<string>('currencyImageUrl');
   sortOrder = Model.attribute<number>('sortOrder');
 }

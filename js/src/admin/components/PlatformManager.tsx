@@ -18,6 +18,7 @@ class PlatformEditModal extends Modal<PlatformEditModalAttrs> {
   private logoUrl: any;
   private previewError: any;
   private linkUrl: any;
+  private currencyImageUrl: any;
   oninit(vnode: Vnode) {
     super.oninit(vnode);
 
@@ -26,6 +27,7 @@ class PlatformEditModal extends Modal<PlatformEditModalAttrs> {
     this.name = Stream(platform ? platform.name() : '');
     this.logoUrl = Stream(platform ? platform.logoUrl() : '');
     this.linkUrl = Stream(platform ? platform.sponsorLinkUrl() : '');
+    this.currencyImageUrl = Stream(platform ? platform.currencyImageUrl?.() : '');
     this.previewError = Stream(false);
   }
 
@@ -71,6 +73,18 @@ class PlatformEditModal extends Modal<PlatformEditModalAttrs> {
             oninput={(e: InputEvent) => this.linkUrl((e.target as HTMLInputElement).value)}
             placeholder="https://example.com/guide"
           />
+        </div>
+
+        <div className="Form-group">
+          <label>货币图片链接（可选）</label>
+          <input
+            className="FormControl"
+            type="url"
+            value={this.currencyImageUrl()}
+            oninput={(e: InputEvent) => this.currencyImageUrl((e.target as HTMLInputElement).value)}
+            placeholder="https://example.com/currency.png"
+          />
+          <div className="helpText">用于在前台显示批准额度前的货币图标</div>
         </div>
 
         {this.logoUrl() && (
@@ -135,7 +149,8 @@ class PlatformEditModal extends Modal<PlatformEditModalAttrs> {
       await platform.save({
         name: this.name(),
         logoUrl: this.logoUrl(),
-        sponsorLinkUrl: this.linkUrl()
+        sponsorLinkUrl: this.linkUrl(),
+        currencyImageUrl: this.currencyImageUrl()
       });
 
       this.attrs.onSave();

@@ -48,6 +48,14 @@ class UpdatePlatformController extends AbstractShowController
             $platform->sponsor_link_url = $linkUrl ?: null;
         }
 
+        if (Arr::has($data, 'currencyImageUrl')) {
+            $currencyUrl = (string) Arr::get($data, 'currencyImageUrl');
+            if ($currencyUrl && !filter_var($currencyUrl, FILTER_VALIDATE_URL)) {
+                throw new \InvalidArgumentException('无效的货币图片链接');
+            }
+            $platform->currency_image_url = $currencyUrl ?: null;
+        }
+
         $platform->save();
 
         return $platform;

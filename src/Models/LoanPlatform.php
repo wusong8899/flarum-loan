@@ -8,7 +8,7 @@ class LoanPlatform extends AbstractModel
 {
     protected $table = 'loan_platforms';
 
-    protected $fillable = ['name', 'logo_url', 'sponsor_link_url', 'sort_order'];
+    protected $fillable = ['name', 'logo_url', 'sponsor_link_url', 'currency_image_url', 'sort_order'];
 
     protected $dates = ['created_at', 'updated_at'];
 
