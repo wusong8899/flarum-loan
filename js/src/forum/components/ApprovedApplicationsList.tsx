@@ -21,15 +21,15 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
       ...applications.map((app: LoanApplication) => ({
         type: 'real',
         id: app.id(),
-        username: username((app.user() || null) as any),
-        avatar: avatar((app.user() || null) as any),
+        username: username((app.user() || null) as any) || '',
+        avatar: (avatar((app.user() || null) as any) as any) || null,
         platform: app.platform() as any,
         amount: app.approvedAmount()
       })),
       ...virtualApprovals.map((va: LoanVirtualApproval) => ({
         type: 'virtual',
         id: va.id(),
-        username: va.fakeUsername(),
+        username: va.fakeUsername() || '',
         avatar: <img src={va.fakeAvatarUrl()} className="Avatar" />,
         platform: va.platform(),
         amount: va.amount()
@@ -61,11 +61,12 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
     const rank = index + 1;
     const reward = this.calculateReward(approval.amount);
     const userName = typeof approval.username === 'string' ? approval.username : '';
+    const avatarNode = approval.avatar ? approval.avatar : <span className="Avatar Avatar--placeholder"></span>;
     return (
       <div className={`LeaderRow${clone ? ' clone' : ''}`} key={`${approval.id}-${clone ? 'c' : 'o'}`}>
         <div className="col-rank">第{rank}名</div>
         <div className="col-user">
-          <span className="user-avatar">{approval.avatar}</span>
+          <span className="user-avatar">{avatarNode}</span>
           <span className="user-name">{userName || '隐藏'}</span>
         </div>
         <div className="col-bet">
