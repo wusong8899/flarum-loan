@@ -22,6 +22,7 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
   private myApplications: LoanApplication[] = [];
 
   oninit(vnode: Vnode) {
+    console.log('[LoanApplicationForm] 组件初始化开始', vnode);
     super.oninit(vnode);
 
     this.platformId = Stream('');
@@ -31,12 +32,25 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
     this.listLoading = true;
     this.myApplications = [];
 
+    console.log('[LoanApplicationForm] 属性设置完成，开始加载我的申请记录');
     this.loadMyApplications();
   }
 
   view() {
+    console.log('[LoanApplicationForm] 渲染view，状态:', {
+      loading: this.loading,
+      listLoading: this.listLoading,
+      myApplicationsCount: this.myApplications.length,
+      platformId: this.platformId(),
+      sponsorAccount: this.sponsorAccount(),
+      applicantAccount: this.applicantAccount()
+    });
+
     const platforms = (this.attrs as LoanApplicationFormAttrs).platforms || [];
+    console.log('[LoanApplicationForm] 传入的平台数据:', platforms);
+
     const selectedPlatform = platforms.find((p: LoanPlatform) => String(p.id()) === this.platformId());
+    console.log('[LoanApplicationForm] 选中的平台:', selectedPlatform);
 
     return (
       <div className="LoanApplicationForm">
@@ -148,26 +162,84 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
   }
 
   async loadMyApplications(): Promise<void> {
+    console.log('[LoanApplicationForm] 开始加载我的申请记录...');
     try {
       const result = await app.store.find('loan-applications') as any;
+      console.log('[LoanApplicationForm] API返回结果:', result);
+      console.log('[LoanApplicationForm] 结果类型:', typeof result, '是否为数组:', Array.isArray(result));
+
       // 确保结果是数组，过滤掉任何null/undefined值
-      this.myApplications = Array.isArray(result) ? result.filter(app => app != null) : [];
+      if (Array.isArray(result)) {
+        console.log('[LoanApplicationForm] 原始数组长度:', result.length);
+        const filteredApps = result.filter(app => {
+          const isValid = app != null;
+          if (!isValid) {
+            console.warn('[LoanApplicationForm] 发现null/undefined应用记录:', app);
+          }
+          return isValid;
+        });
+        this.myApplications = filteredApps;
+        console.log('[LoanApplicationForm] 过滤后数组长度:', filteredApps.length);
+
+        // 检查每个应用记录的详细信息
+        filteredApps.forEach((app, index) => {
+          console.log(`[LoanApplicationForm] 应用记录 ${index}:`, {
+            id: app.id?.(),
+            platform: app.platform?.(),
+            platformMethod: typeof app.platform,
+            sponsorAccount: app.sponsorAccount?.(),
+            applicantAccount: app.applicantAccount?.(),
+            status: app.status?.(),
+            approvedAmount: app.approvedAmount?.()
+          });
+        });
+      } else {
+        console.warn('[LoanApplicationForm] API返回的不是数组，设置为空数组');
+        this.myApplications = [];
+      }
     } catch (error) {
-      console.error('Failed to load loan applications:', error);
+      console.error('[LoanApplicationForm] 加载申请记录失败:', error);
       this.myApplications = [];
     } finally {
+      console.log('[LoanApplicationForm] 最终设置的应用记录数量:', this.myApplications.length);
       this.listLoading = false;
       m.redraw();
     }
   }
 
   private renderOrderRow(appModel: LoanApplication) {
+    console.log('[LoanApplicationForm] 渲染订单行，应用模型:', appModel);
+
     // 添加null检查防止TypeError
     if (!appModel) {
+      console.warn('[LoanApplicationForm] 应用模型为null，跳过渲染');
       return null;
     }
 
+    console.log('[LoanApplicationForm] 应用模型详情:', {
+      id: appModel.id?.(),
+      hasId: typeof appModel.id,
+      hasPlatform: typeof appModel.platform,
+      hasSponsorAccount: typeof appModel.sponsorAccount,
+      hasApplicantAccount: typeof appModel.applicantAccount,
+      hasStatus: typeof appModel.status,
+      hasApprovedAmount: typeof appModel.approvedAmount
+    });
+
     const platform = appModel.platform ? appModel.platform() : null;
+    console.log('[LoanApplicationForm] 平台信息:', platform);
+
+    if (platform) {
+      console.log('[LoanApplicationForm] 平台详情:', {
+        hasName: typeof platform.name,
+        hasLogoUrl: typeof platform.logoUrl,
+        hasCurrencyImageUrl: typeof platform.currencyImageUrl,
+        name: platform.name?.(),
+        logoUrl: platform.logoUrl?.(),
+        currencyImageUrl: platform.currencyImageUrl?.()
+      });
+    }
+
     const platformName = platform && platform.name ? platform.name() : '-';
     const platformLogo = platform && platform.logoUrl ? platform.logoUrl() : '';
     const currencyImg = platform && platform.currencyImageUrl ? platform.currencyImageUrl() : '';
@@ -176,6 +248,16 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
     const applicant = appModel.applicantAccount?.() || '-';
     const statusText = this.statusText(appModel.status ? appModel.status() : undefined);
     const amount = appModel.approvedAmount?.();
+
+    console.log('[LoanApplicationForm] 渲染数据:', {
+      platformName,
+      platformLogo,
+      currencyImg,
+      sponsor,
+      applicant,
+      statusText,
+      amount
+    });
 
     return (
       <div className="OrderList-row">
