@@ -99,7 +99,16 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
           </div>
         </div>
         <div className="MyApplications">
-          <h3>您的申请订单</h3>
+          <h3>
+            {app.forum.attribute('loanLogoUrl') ? (
+              <img
+                src={app.forum.attribute('loanLogoUrl')}
+                alt="logo"
+                style={{ height: '24px', verticalAlign: 'middle', marginRight: '8px' }}
+              />
+            ) : null}
+            您的申请订单
+          </h3>
           {this.listLoading ? (
             <div>加载中...</div>
           ) : (

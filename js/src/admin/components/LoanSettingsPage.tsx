@@ -17,6 +17,23 @@ export default class LoanSettingsPage extends ExtensionPage {
   content() {
     return (
       <div className="LoanSettingsPage">
+        <div className="LoanSettingsPage-basic">
+          <h4>基础设置</h4>
+          <form onsubmit={this.saveSettings.bind(this)}>
+            <div className="Form-group">
+              <label>订单 Logo 图片 URL</label>
+              <input
+                className="FormControl"
+                value={this.setting('wusong8899-loan.logo_url')()}
+                oninput={(e: InputEvent) => this.setting('wusong8899-loan.logo_url')((e.target as HTMLInputElement).value)}
+                placeholder="https://example.com/logo.png"
+              />
+            </div>
+            <div className="Form-group">
+              <button type="submit" className="Button Button--primary">保存</button>
+            </div>
+          </form>
+        </div>
         <div className="LoanSettingsPage-tabs">
           <button
             className={this.activeTab === 'platforms' ? 'active' : ''}

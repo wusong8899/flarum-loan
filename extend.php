@@ -20,6 +20,10 @@ return [
 
     new Extend\Locales(__DIR__ . '/locale'),
 
+    // 将后台设置的 Logo URL 序列化到论坛前端属性 loanLogoUrl
+    (new Extend\Settings())
+        ->serializeToForum('loanLogoUrl', 'wusong8899-loan.logo_url'),
+
     (new Extend\Routes('api'))
         // 平台管理
         ->get('/loan-platforms', 'loan.platforms.list', Controllers\ListPlatformsController::class)
