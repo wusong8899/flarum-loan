@@ -1,6 +1,5 @@
 // js/src/forum/components/ApprovedApplicationsList.tsx
 import Component from 'flarum/common/Component';
-import m from 'mithril';
 import avatar from 'flarum/common/helpers/avatar';
 import username from 'flarum/common/helpers/username';
 import LoanApplication from '../../common/models/LoanApplication';
@@ -14,7 +13,7 @@ type ApprovedApplicationsListAttrs = {
 export default class ApprovedApplicationsList extends Component<ApprovedApplicationsListAttrs> {
   private scrollTimer: number | undefined;
 
-    view() {
+  view() {
     const { applications = [], virtualApprovals = [] } = this.attrs as ApprovedApplicationsListAttrs;
 
     console.log('[ApprovedApplicationsList] 渲染开始，输入数据:', {
