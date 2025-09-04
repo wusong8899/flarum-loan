@@ -3,7 +3,7 @@ import Component from 'flarum/common/Component';
 import Button from 'flarum/common/components/Button';
 import PlatformSelect from './PlatformSelect';
 import Stream from 'flarum/common/utils/Stream';
-import m,{Vnode} from 'mithril';
+import m, { Vnode } from 'mithril';
 import app from 'flarum/forum/app';
 import LoanApplication from '../../common/models/LoanApplication';
 import LoanPlatform from '../../common/models/LoanPlatform';
@@ -56,11 +56,21 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
       <div className="LoanApplicationForm">
         <div className="Form-group">
           <label>选择平台</label>
-          <PlatformSelect
-            platforms={platforms}
-            value={this.platformId()}
-            onchange={this.platformId}
-          />
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <PlatformSelect
+              platforms={platforms}
+              value={this.platformId()}
+              onchange={this.platformId}
+            />
+            {(!selectedPlatform || selectedPlatform.sponsorLinkUrl?.()) && (
+              <Button
+                className="Button"
+                onclick={this.openSponsorLink.bind(this)}
+              >
+                打开赞助平台链接
+              </Button>
+            )}
+          </div>
         </div>
 
         <div className="Form-twoInputs">
@@ -72,13 +82,6 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
               oninput={(e: InputEvent) => this.sponsorAccount((e.target as HTMLInputElement).value)}
               placeholder="例如：平台用户名/ID"
             />
-            <Button
-              className="Button"
-              disabled={!selectedPlatform || !selectedPlatform.sponsorLinkUrl?.()}
-              onclick={this.openSponsorLink.bind(this)}
-            >
-              打开赞助平台链接
-            </Button>
           </div>
           <div className="Form-group">
             <label>申请账号</label>
