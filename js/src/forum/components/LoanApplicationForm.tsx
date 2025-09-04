@@ -1,7 +1,6 @@
 // js/src/forum/components/LoanApplicationForm.tsx
 import Component from 'flarum/common/Component';
 import Button from 'flarum/common/components/Button';
-import Select from 'flarum/common/components/Select';
 import PlatformSelect from './PlatformSelect';
 import Stream from 'flarum/common/utils/Stream';
 import m,{Vnode} from 'mithril';
@@ -152,7 +151,7 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
       this.myApplications = await app.store.find('loan-applications') as any;
     } finally {
       this.listLoading = false;
-      m.redraw();
+      // m.redraw();
     }
   }
 

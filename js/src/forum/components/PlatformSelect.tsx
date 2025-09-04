@@ -1,5 +1,5 @@
 import Component from 'flarum/common/Component';
-import m,{Vnode} from 'mithril';
+import m from 'mithril';
 import LoanPlatform from '../../common/models/LoanPlatform';
 
 type PlatformSelectAttrs = {
@@ -11,7 +11,7 @@ type PlatformSelectAttrs = {
 export default class PlatformSelect extends Component<PlatformSelectAttrs> {
   private open = false;
 
-  view(vnode: Vnode<PlatformSelectAttrs>) {
+  view() {
     const { platforms = [], value } = this.attrs as PlatformSelectAttrs;
     const selected = platforms.find((p) => String(p.id()) === value) || null;
 
