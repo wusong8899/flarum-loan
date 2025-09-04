@@ -1,5 +1,6 @@
 // js/src/forum/components/ApprovedApplicationsList.tsx
 import Component from 'flarum/common/Component';
+import m from 'mithril';
 import avatar from 'flarum/common/helpers/avatar';
 import username from 'flarum/common/helpers/username';
 import LoanApplication from '../../common/models/LoanApplication';
@@ -15,7 +16,7 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
 
     view() {
     const { applications = [], virtualApprovals = [] } = this.attrs as ApprovedApplicationsListAttrs;
-    
+
     console.log('[ApprovedApplicationsList] 渲染开始，输入数据:', {
       applicationsCount: applications.length,
       virtualApprovalsCount: virtualApprovals.length,
@@ -26,7 +27,7 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
     // 合并真实和虚拟数据，添加null检查
     const realApprovals = applications
       .filter((app: LoanApplication) => {
-        const isValid = app != null && app.id && app.approvedAmount;
+        const isValid = app != null && app.id() && app.approvedAmount;
         if (!isValid) {
           console.warn('[ApprovedApplicationsList] 过滤掉无效的真实申请:', {
             app,
@@ -39,10 +40,10 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
       })
       .map((app: LoanApplication, index) => {
         console.log(`[ApprovedApplicationsList] 处理真实申请 ${index}:`, app);
-        
+
         const user = app.user ? app.user() : null;
         const platform = app.platform ? app.platform() : null;
-        
+
         console.log(`[ApprovedApplicationsList] 真实申请 ${index} 详情:`, {
           id: app.id?.(),
           user: user,
@@ -51,7 +52,7 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
           avatar: user ? avatar(user as any) : null,
           approvedAmount: app.approvedAmount?.()
         });
-        
+
         return {
           type: 'real',
           id: app.id(),
@@ -64,7 +65,7 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
 
     const virtualApprovalsProcessed = virtualApprovals
       .filter((va: LoanVirtualApproval) => {
-        const isValid = va != null && va.id && va.amount;
+        const isValid = va != null && va.id() && va.amount;
         if (!isValid) {
           console.warn('[ApprovedApplicationsList] 过滤掉无效的虚拟申请:', {
             va,
@@ -77,7 +78,7 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
       })
       .map((va: LoanVirtualApproval, index) => {
         console.log(`[ApprovedApplicationsList] 处理虚拟申请 ${index}:`, va);
-        
+
         const result = {
           type: 'virtual',
           id: va.id(),
@@ -86,13 +87,13 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
           platform: va.platform ? va.platform() : null,
           amount: va.amount()
         };
-        
+
         console.log(`[ApprovedApplicationsList] 虚拟申请 ${index} 处理结果:`, result);
         return result;
       });
 
     const allApprovals = [...realApprovals, ...virtualApprovalsProcessed];
-    
+
     console.log('[ApprovedApplicationsList] 合并后的数据:', {
       realCount: realApprovals.length,
       virtualCount: virtualApprovalsProcessed.length,

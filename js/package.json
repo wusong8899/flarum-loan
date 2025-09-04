@@ -30,5 +30,8 @@
         "check-typings": "tsc --noEmit --emitDeclarationOnly false",
         "check-typings-coverage": "typescript-coverage-report"
     },
-    "prettier": "@flarum/prettier-config"
+    "prettier": "@flarum/prettier-config",
+    "dependencies": {
+        "@faker-js/faker": "^10.0.0"
+    }
 }
