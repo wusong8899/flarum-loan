@@ -3,31 +3,31 @@
 namespace Wusong8899\Loan\Api\Controllers;
 
 use Flarum\Api\Controller\AbstractDeleteController;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\ConnectionInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Tobscure\JsonApi\Document;
 
 class ClearLoanDataController extends AbstractDeleteController
 {
+    /**
+     * @var ConnectionInterface
+     */
+    protected $db;
+
+    public function __construct(ConnectionInterface $db)
+    {
+        $this->db = $db;
+    }
+
     protected function delete(ServerRequestInterface $request)
     {
         $actor = $request->getAttribute('actor');
         $actor->assertAdmin();
 
-        DB::transaction(function () {
-            // Disable FK checks for TRUNCATE compatibility across drivers where needed
-            $driver = DB::getDriverName();
-            if ($driver === 'mysql') {
-                DB::statement('SET FOREIGN_KEY_CHECKS=0');
-            }
-
-            // Truncate child tables first
-            DB::table('loan_virtual_approvals')->truncate();
-            DB::table('loan_applications')->truncate();
-
-            if ($driver === 'mysql') {
-                DB::statement('SET FOREIGN_KEY_CHECKS=1');
-            }
+        $this->db->transaction(function () {
+            // Simply delete all records - cleaner approach for Flarum
+            // Delete child tables first to respect foreign key constraints
+            $this->db->table('loan_virtual_approvals')->delete();
+            $this->db->table('loan_applications')->delete();
         });
     }
 }

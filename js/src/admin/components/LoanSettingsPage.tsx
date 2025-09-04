@@ -48,7 +48,7 @@ export default class LoanSettingsPage extends ExtensionPage {
     if (!confirm('确定要清空所有申请与虚拟审批数据吗？此操作不可撤销。')) return;
     try {
       await app.request({
-        method: 'POST',
+        method: 'DELETE',
         url: app.forum.attribute('apiUrl') + '/loan-clear',
       });
       app.alerts.show({ type: 'success' }, '已清空申请与虚拟审批数据');
