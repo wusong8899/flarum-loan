@@ -151,7 +151,7 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
       this.myApplications = await app.store.find('loan-applications') as any;
     } finally {
       this.listLoading = false;
-      // m.redraw();
+      m.redraw();
     }
   }
 
