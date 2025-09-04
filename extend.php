@@ -38,7 +38,7 @@ return [
         ->post('/loan-applications/generate-virtual', 'loan.virtual.generate', Controllers\GenerateVirtualController::class)
         ->get('/loan-virtual-approvals', 'loan.virtual.list', Controllers\ListVirtualApprovalsController::class)
         // 危险操作：清空申请与虚拟审批
-        ->post('/loan-clear', 'loan.clear', Controllers\ClearLoanDataController::class),
+        ->delete('/loan-clear', 'loan.clear', Controllers\ClearLoanDataController::class),
 
     (new Extend\Model(User::class))
         ->hasMany('loanApplications', LoanApplication::class, 'user_id'),
