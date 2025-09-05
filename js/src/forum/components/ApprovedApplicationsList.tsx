@@ -52,12 +52,19 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
           approvedAmount: app.approvedAmount?.()
         });
 
+        const displayName = (user && (user as any).displayName && typeof (user as any).displayName === 'function')
+          ? (user as any).displayName()
+          : (user && (user as any).username && typeof (user as any).username === 'function')
+            ? (user as any).username()
+            : '';
+
         return {
           type: 'real',
           id: app.id(),
-          username: username(user as any) || '',
+          displayName: displayName,
           avatar: (avatar(user as any) as any) || null,
-          platform: platform,
+          platformName: platform && (platform as any).name && typeof (platform as any).name === 'function' ? (platform as any).name() : '',
+          platformLogoUrl: platform && (platform as any).logoUrl && typeof (platform as any).logoUrl === 'function' ? (platform as any).logoUrl() : '',
           amount: app.approvedAmount()
         };
       });
@@ -78,12 +85,14 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
       .map((va: LoanVirtualApproval, index) => {
         console.log(`[ApprovedApplicationsList] 处理虚拟申请 ${index}:`, va);
 
+        const platform = va.platform ? va.platform() : null;
         const result = {
           type: 'virtual',
           id: va.id(),
-          username: va.fakeUsername ? va.fakeUsername() : '',
+          displayName: va.fakeUsername ? va.fakeUsername() : '',
           avatar: va.fakeAvatarUrl ? <img src={va.fakeAvatarUrl()} className="Avatar" /> : null,
-          platform: va.platform ? va.platform() : null,
+          platformName: platform && (platform as any).name && typeof (platform as any).name === 'function' ? (platform as any).name() : '',
+          platformLogoUrl: platform && (platform as any).logoUrl && typeof (platform as any).logoUrl === 'function' ? (platform as any).logoUrl() : '',
           amount: va.amount()
         };
 
@@ -106,10 +115,10 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
     return (
       <div className="ApprovedApplicationsList Leaderboard">
         <div className="Leaderboard-header">
-          <span className="col-rank">段位</span>
-          <span className="col-user">用户</span>
-          <span className="col-bet">下注额</span>
-          <span className="col-reward">奖励</span>
+          <span className="col-avatar">用户</span>
+          <span className="col-nickname">昵称</span>
+          <span className="col-platform">贷款平台</span>
+          <span className="col-amount">获批额度</span>
         </div>
         <div className="Leaderboard-body" oncreate={this.startAutoScroll.bind(this)} onremove={this.stopAutoScroll.bind(this)}>
           <div className="Leaderboard-scroll">
@@ -122,24 +131,23 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
   }
 
   renderRow(approval: any, index: number, clone: boolean = false) {
-    const rank = index + 1;
-    const reward = this.calculateReward(approval.amount);
-    const userName = typeof approval.username === 'string' ? approval.username : '';
+    const userName = typeof approval.displayName === 'string' ? approval.displayName : '';
     const avatarNode = approval.avatar ? approval.avatar : <span className="Avatar Avatar--placeholder"></span>;
     return (
       <div className={`LeaderRow${clone ? ' clone' : ''}`} key={`${approval.id}-${clone ? 'c' : 'o'}`}>
-        <div className="col-rank">第{rank}名</div>
-        <div className="col-user">
-          <span className="user-avatar">{avatarNode}</span>
-          <span className="user-name">{userName || '隐藏'}</span>
+        <div className="col-avatar">{avatarNode}</div>
+        <div className="col-nickname">{userName || '隐藏'}</div>
+        <div className="col-platform">
+          {approval.platformLogoUrl ? (
+            <span className="platform-badge"><img src={approval.platformLogoUrl} alt="" /></span>
+          ) : (
+            <span className="platform-badge platform-badge--placeholder" />
+          )}
+          <span className="platform-name">{approval.platformName || '-'}</span>
         </div>
-        <div className="col-bet">
-          <span className="currency">$</span>
-          <span className="value">{this.formatAmount(approval.amount)}</span>
-        </div>
-        <div className="col-reward">
-          <span className="btc">฿</span>
-          <span className="value">{this.formatAmount(reward, 2)}</span>
+        <div className="col-amount">
+          <span className="coin">¥</span>
+          <span className="value">{this.formatAmount(approval.amount, 2)}</span>
         </div>
       </div>
     );
@@ -164,11 +172,6 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
 
   stopAutoScroll() {
     if (this.scrollTimer) cancelAnimationFrame(this.scrollTimer);
-  }
-
-  calculateReward(amount: number) {
-    // 简化：示例按金额的 0.2% 计算奖励
-    return Math.max(3500, Math.round(amount * 0.002));
   }
 
   formatAmount(num: number, fixed?: number) {
