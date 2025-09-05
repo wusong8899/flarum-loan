@@ -117,8 +117,7 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
     return (
       <div className="ApprovedApplicationsList Leaderboard">
         <div className="Leaderboard-header">
-          <span className="col-avatar">用户</span>
-          <span className="col-nickname">昵称</span>
+          <span className="col-user">用户</span>
           <span className="col-platform">贷款平台</span>
           <span className="col-amount">获批额度</span>
         </div>
@@ -137,8 +136,10 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
     const avatarNode = approval.avatar ? approval.avatar : <span className="Avatar Avatar--placeholder"></span>;
     return (
       <div className={`LeaderRow${clone ? ' clone' : ''}`} key={`${approval.id}-${clone ? 'c' : 'o'}`}>
-        <div className="col-avatar">{avatarNode}</div>
-        <div className="col-nickname">{userName || '隐藏'}</div>
+        <div className="col-user">
+          {avatarNode}
+          <span className="nickname">{userName || '隐藏'}</span>
+        </div>
         <div className="col-platform">
           {approval.platformLogoUrl ? (
             <span className="platform-badge"><img src={approval.platformLogoUrl} alt="" /></span>
