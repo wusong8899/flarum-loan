@@ -27,6 +27,10 @@
   border-radius: 12px;
   overflow: hidden;
 
+  .Leaderboard-header {
+    border-bottom: 1px solid var(--control-border);
+  }
+
   .Leaderboard-body {
     position: relative;
     height: 360px; // 可根据需要调整
@@ -42,6 +46,12 @@
     border-collapse: separate;
     border-spacing: 0;
   }
+
+  // column widths for header/body alignment
+  .Leaderboard-table .colw-avatar { width: 120px; }
+  .Leaderboard-table .colw-nickname { width: auto; }
+  .Leaderboard-table .colw-platform { width: 1%; }
+  .Leaderboard-table .colw-amount { width: 180px; }
 
   .Leaderboard-table thead th {
     position: sticky;
@@ -148,6 +158,8 @@
 
   // Responsive adjustments for phones
   @media (max-width: 600px) {
+    .Leaderboard-table .colw-avatar { width: 56px; }
+    .Leaderboard-table .colw-amount { width: 140px; }
     .Leaderboard-table thead th { padding: 8px 12px; font-size: 12px; }
     .LeaderRow td { padding: 10px 12px; }
 

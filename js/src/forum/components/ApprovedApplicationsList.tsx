@@ -116,17 +116,33 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
 
     return (
       <div className="ApprovedApplicationsList Leaderboard">
+        <div className="Leaderboard-header">
+          <table className="Leaderboard-table Leaderboard-table--header">
+            <colgroup>
+              <col className="colw-avatar" />
+              <col className="colw-nickname" />
+              <col className="colw-platform" />
+              <col className="colw-amount" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th className="col-avatar">用户</th>
+                <th className="col-nickname">昵称</th>
+                <th className="col-platform">贷款平台</th>
+                <th className="col-amount">获批额度</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
         <div className="Leaderboard-body" oncreate={this.startAutoScroll.bind(this)} onremove={this.stopAutoScroll.bind(this)}>
           <div className="Leaderboard-scroll">
-            <table className="Leaderboard-table">
-              <thead>
-                <tr>
-                  <th className="col-avatar">用户</th>
-                  <th className="col-nickname">昵称</th>
-                  <th className="col-platform">贷款平台</th>
-                  <th className="col-amount">获批额度</th>
-                </tr>
-              </thead>
+            <table className="Leaderboard-table Leaderboard-table--body">
+              <colgroup>
+                <col className="colw-avatar" />
+                <col className="colw-nickname" />
+                <col className="colw-platform" />
+                <col className="colw-amount" />
+              </colgroup>
               <tbody>
                 {allApprovals.map((item, index) => this.renderRow(item, index))}
                 {allApprovals.map((item, index) => this.renderRow(item, index, true))}
