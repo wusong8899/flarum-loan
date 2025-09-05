@@ -183,15 +183,32 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
       // 确保结果是数组，过滤掉任何null/undefined值
       if (Array.isArray(result)) {
         console.log('[LoanApplicationForm] 原始数组长度:', result.length);
-        const filteredApps = result.filter(app => {
-          const isValid = app != null;
+        const filteredApps = result.filter(applicationModel => {
+          const isValid = applicationModel != null;
           if (!isValid) {
-            console.warn('[LoanApplicationForm] 发现null/undefined应用记录:', app);
+            console.warn('[LoanApplicationForm] 发现null/undefined应用记录:', applicationModel);
           }
           return isValid;
         });
-        this.myApplications = filteredApps;
-        console.log('[LoanApplicationForm] 过滤后数组长度:', filteredApps.length);
+
+        // 仅显示当前登录用户的申请（管理员在此区域也只显示自己的）
+        const currentUser = app.session.user;
+        const currentUserId = currentUser ? currentUser.id() : null;
+        const mineOnly = currentUserId
+          ? filteredApps.filter((applicationModel: LoanApplication) => {
+            try {
+              const userModel = applicationModel.user ? applicationModel.user() : null;
+              const userIdOfApplication = userModel && typeof (userModel as any).id === 'function' ? (userModel as any).id() : null;
+              return userIdOfApplication === currentUserId;
+            } catch (e) {
+              console.warn('[LoanApplicationForm] 读取应用用户失败:', e, applicationModel);
+              return false;
+            }
+          })
+          : [];
+
+        this.myApplications = mineOnly as any;
+        console.log('[LoanApplicationForm] 过滤为当前用户后的数组长度:', mineOnly.length);
 
         // 检查每个应用记录的详细信息
         filteredApps.forEach((app, index) => {
