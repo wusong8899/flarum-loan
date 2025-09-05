@@ -116,16 +116,22 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
 
     return (
       <div className="ApprovedApplicationsList Leaderboard">
-        <div className="Leaderboard-header">
-          <span className="col-avatar">用户</span>
-          <span className="col-nickname">昵称</span>
-          <span className="col-platform">贷款平台</span>
-          <span className="col-amount">获批额度</span>
-        </div>
         <div className="Leaderboard-body" oncreate={this.startAutoScroll.bind(this)} onremove={this.stopAutoScroll.bind(this)}>
           <div className="Leaderboard-scroll">
-            {allApprovals.map((item, index) => this.renderRow(item, index))}
-            {allApprovals.map((item, index) => this.renderRow(item, index, true))}
+            <table className="Leaderboard-table">
+              <thead>
+                <tr>
+                  <th className="col-avatar">用户</th>
+                  <th className="col-nickname">昵称</th>
+                  <th className="col-platform">贷款平台</th>
+                  <th className="col-amount">获批额度</th>
+                </tr>
+              </thead>
+              <tbody>
+                {allApprovals.map((item, index) => this.renderRow(item, index))}
+                {allApprovals.map((item, index) => this.renderRow(item, index, true))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -136,26 +142,26 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
     const userName = typeof approval.displayName === 'string' ? approval.displayName : '';
     const avatarNode = approval.avatar ? approval.avatar : <span className="Avatar Avatar--placeholder"></span>;
     return (
-      <div className={`LeaderRow${clone ? ' clone' : ''}`} key={`${approval.id}-${clone ? 'c' : 'o'}`}>
-        <div className="col-avatar">{avatarNode}</div>
-        <div className="col-nickname">{userName || '隐藏'}</div>
-        <div className="col-platform">
+      <tr className={`LeaderRow${clone ? ' clone' : ''}`} key={`${approval.id}-${clone ? 'c' : 'o'}`}>
+        <td className="col-avatar">{avatarNode}</td>
+        <td className="col-nickname">{userName || '隐藏'}</td>
+        <td className="col-platform">
           {approval.platformLogoUrl ? (
             <span className="platform-badge"><img src={approval.platformLogoUrl} alt="" /></span>
           ) : (
             <span className="platform-badge platform-badge--placeholder" />
           )}
           <span className="platform-name">{approval.platformName || '-'}</span>
-        </div>
-        <div className="col-amount">
+        </td>
+        <td className="col-amount">
           {approval.currencyImageUrl ? (
             <img className="coin" src={approval.currencyImageUrl} alt="coin" />
           ) : (
             <span className="coin">¥</span>
           )}
           <span className="value">{this.formatAmount(approval.amount, 2)}</span>
-        </div>
-      </div>
+        </td>
+      </tr>
     );
   }
 
