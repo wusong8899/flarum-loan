@@ -65,6 +65,7 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
           avatar: (avatar(user as any) as any) || null,
           platformName: platform && (platform as any).name && typeof (platform as any).name === 'function' ? (platform as any).name() : '',
           platformLogoUrl: platform && (platform as any).logoUrl && typeof (platform as any).logoUrl === 'function' ? (platform as any).logoUrl() : '',
+          currencyImageUrl: platform && (platform as any).currencyImageUrl && typeof (platform as any).currencyImageUrl === 'function' ? (platform as any).currencyImageUrl() : '',
           amount: app.approvedAmount()
         };
       });
@@ -93,6 +94,7 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
           avatar: va.fakeAvatarUrl ? <img src={va.fakeAvatarUrl()} className="Avatar" /> : null,
           platformName: platform && (platform as any).name && typeof (platform as any).name === 'function' ? (platform as any).name() : '',
           platformLogoUrl: platform && (platform as any).logoUrl && typeof (platform as any).logoUrl === 'function' ? (platform as any).logoUrl() : '',
+          currencyImageUrl: platform && (platform as any).currencyImageUrl && typeof (platform as any).currencyImageUrl === 'function' ? (platform as any).currencyImageUrl() : '',
           amount: va.amount()
         };
 
@@ -146,7 +148,11 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
           <span className="platform-name">{approval.platformName || '-'}</span>
         </div>
         <div className="col-amount">
-          <span className="coin">¥</span>
+          {approval.currencyImageUrl ? (
+            <img className="coin" src={approval.currencyImageUrl} alt="coin" />
+          ) : (
+            <span className="coin">¥</span>
+          )}
           <span className="value">{this.formatAmount(approval.amount, 2)}</span>
         </div>
       </div>
