@@ -140,31 +140,30 @@
   }
 
   // Responsive adjustments for phones
-  @media (max-width: 600px) {
+  @media @phone {
     .Leaderboard-header {
-      grid-template-columns: 56px 1fr auto auto;
+      grid-template-columns: auto auto auto auto;
       padding: 8px 12px;
       font-size: 12px;
     }
 
     .LeaderRow {
-      grid-template-columns: 56px 1fr auto auto;
-      padding: 10px 12px;
+      grid-template-columns: auto auto auto auto;
+      padding: 10px 8px;
     }
 
     .col-avatar {
       .Avatar,
       img.Avatar,
       .Avatar.Avatar--placeholder {
-        width: 40px;
-        height: 40px;
+        width: 20px;
+        height: 20px;
         border-width: 2px;
       }
     }
 
     .col-nickname {
-      font-size: 14px;
-      line-height: 1.25;
+      font-size: 10px;
       overflow: hidden;
       display: -webkit-box;
       -webkit-line-clamp: 2;
@@ -174,16 +173,16 @@
     }
 
     .platform-badge {
-      width: 28px;
-      height: 28px;
+      width: 20px;
+      height: 20px;
       img { width: 16px; height: 16px; }
     }
 
     .platform-name { font-size: 12px; }
 
     .col-amount {
-      .coin { width: 24px; height: 24px; line-height: 24px; font-size: 14px; }
-      .value { font-size: 16px; }
+      .coin { width: 20px; height: 20px; line-height: 20px; font-size: 14px; }
+      .value { font-size: 10px; }
     }
   }
 }
