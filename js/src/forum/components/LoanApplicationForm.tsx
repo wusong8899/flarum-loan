@@ -7,6 +7,7 @@ import m, { Vnode } from 'mithril';
 import app from 'flarum/forum/app';
 import LoanApplication from '../../common/models/LoanApplication';
 import LoanPlatform from '../../common/models/LoanPlatform';
+import { PLAY_ICON_PATH } from '../../common/constants/svgPaths';
 
 type LoanApplicationFormAttrs = {
   platforms: LoanPlatform[];
@@ -70,7 +71,7 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
               >
                 <span className="register-icon" aria-hidden="true">
                   <svg width="17" height="17" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M10.3259 3.91873C12.6748 5.25805 13.8493 5.92772 14.2435 6.802C14.5872 7.56458 14.5873 8.43542 14.2435 9.198C13.8493 10.0723 12.6748 10.7419 10.3259 12.0813C7.9769 13.4206 6.80242 14.0903 5.83867 13.9902C4.99805 13.903 4.2344 13.4675 3.73757 12.7922C3.16797 12.018 3.16797 10.6786 3.16797 8C3.16797 5.32135 3.16797 3.98203 3.73757 3.20778C4.2344 2.53245 4.99805 2.09703 5.83867 2.00978C6.80242 1.90974 7.9769 2.57941 10.3259 3.91873Z" stroke="#FFFFFF" />
+                    <path d={PLAY_ICON_PATH} stroke="#FFFFFF" />
                   </svg>
                 </span>
                 注册
