@@ -345,7 +345,19 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
     const maxMonths = parseInt((app.forum.attribute('loanRepaymentMaxMonths') as any) || '6', 10);
     const isOver = this.isOverdueLong(dateStr, maxMonths);
     if (!dateStr) return <span>-</span>;
-    return isOver ? <span className="overdue">未还款</span> : <span>{dateStr}</span>;
+    if (isOver) return <span className="overdue">未还款</span>;
+    const formatted = this.formatDateYmd(dateStr);
+    return <span>{formatted ?? dateStr}</span>;
+  }
+
+  private formatDateYmd(dateStr?: string): string | null {
+    if (!dateStr) return null;
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return null;
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
   }
 
   private isOverdueLong(dateStr?: string, maxMonths?: number): boolean {
