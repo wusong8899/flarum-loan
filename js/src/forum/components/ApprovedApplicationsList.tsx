@@ -73,18 +73,9 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
     const virtualApprovalsProcessed = virtualApprovals
       .filter((va: LoanVirtualApproval) => {
         const isValid = va != null && va.id() && va.amount;
-        if (!isValid) {
-          console.warn('[ApprovedApplicationsList] 过滤掉无效的虚拟申请:', {
-            va,
-            hasVa: va != null,
-            hasId: va?.id,
-            hasAmount: va?.amount
-          });
-        }
         return isValid;
       })
       .map((va: LoanVirtualApproval, index) => {
-        console.log(`[ApprovedApplicationsList] 处理虚拟申请 ${index}:`, va);
 
         const platform = va.platform ? va.platform() : null;
         const result = {
@@ -98,7 +89,6 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
           amount: va.amount()
         };
 
-        console.log(`[ApprovedApplicationsList] 虚拟申请 ${index} 处理结果:`, result);
         return result;
       });
 

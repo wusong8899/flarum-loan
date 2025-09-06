@@ -81,7 +81,6 @@ export default class LoanApplicationPage extends Component {
         return isValid;
       }) : [];
     } else {
-      console.error('[LoanApplicationPage] 加载虚拟审批失败:', results[2].reason);
       this.virtualApprovals = [];
     }
 
