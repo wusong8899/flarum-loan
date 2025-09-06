@@ -38,19 +38,8 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
         return isValid;
       })
       .map((app: LoanApplication, index) => {
-        console.log(`[ApprovedApplicationsList] 处理真实申请 ${index}:`, app);
-
         const user = app.user ? app.user() : null;
         const platform = app.platform ? app.platform() : null;
-
-        console.log(`[ApprovedApplicationsList] 真实申请 ${index} 详情:`, {
-          id: app.id?.(),
-          user: user,
-          platform: platform,
-          username: user ? username(user as any) : null,
-          avatar: user ? avatar(user as any) : null,
-          approvedAmount: app.approvedAmount?.()
-        });
 
         const displayName = (user && (user as any).displayName && typeof (user as any).displayName === 'function')
           ? (user as any).displayName()
