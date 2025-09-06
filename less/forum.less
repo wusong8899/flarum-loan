@@ -14,9 +14,9 @@
       width: 100%;
       height: 100%;
       background: linear-gradient(45deg, #f0f0f0 25%, transparent 25%),
-                  linear-gradient(-45deg, #f0f0f0 25%, transparent 25%),
-                  linear-gradient(45deg, transparent 75%, #f0f0f0 75%),
-                  linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
+        linear-gradient(-45deg, #f0f0f0 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #f0f0f0 75%),
+        linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
       background-size: 10px 10px;
     }
   }
@@ -51,14 +51,15 @@
     grid-template-columns: 200px 1fr 1fr;
     align-items: center;
     padding: 12px 16px;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.02);
   }
 
   .col-user {
     display: flex;
     align-items: center;
     gap: 10px;
+
     .nickname {
       color: #fff;
       font-weight: 600;
@@ -69,6 +70,7 @@
 
   // Avatar sizing in leaderboard
   .col-user {
+
     .Avatar,
     img.Avatar,
     .Avatar.Avatar--placeholder {
@@ -76,7 +78,7 @@
       height: 48px;
       border-radius: 50%;
       border: 3px solid rgba(255, 255, 255, 0.25);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
     }
 
     img.Avatar {
@@ -100,14 +102,21 @@
     justify-content: center;
     overflow: hidden;
 
-    img { width: 20px; height: 20px; object-fit: contain; }
+    img {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+    }
   }
 
   .platform-badge--placeholder {
-    background: rgba(255,255,255,0.15);
+    background: rgba(255, 255, 255, 0.15);
   }
 
-  .platform-name { color: #fff; font-weight: 600; }
+  .platform-name {
+    color: #fff;
+    font-weight: 600;
+  }
 
   .col-amount {
     display: flex;
@@ -123,7 +132,7 @@
       height: 28px;
       border-radius: 50%;
       object-fit: cover;
-      box-shadow: inset 0 1px 1px rgba(255,255,255,0.4), 0 1px 2px rgba(0,0,0,0.25);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 1px 2px rgba(0, 0, 0, 0.25);
 
       // 当是文本徽章时（后备 ¥）
       background: #f0a34a;
@@ -133,7 +142,9 @@
       font-size: 16px;
     }
 
-    .value { font-size: 18px; }
+    .value {
+      font-size: 18px;
+    }
   }
 
   // Responsive adjustments for phones
@@ -150,6 +161,7 @@
     }
 
     .col-user {
+
       .Avatar,
       img.Avatar,
       .Avatar.Avatar--placeholder {
@@ -172,20 +184,35 @@
     .platform-badge {
       width: 20px;
       height: 20px;
-      img { width: 16px; height: 16px; }
+
+      img {
+        width: 16px;
+        height: 16px;
+      }
     }
 
-    .platform-name { font-size: 12px; }
+    .platform-name {
+      font-size: 12px;
+    }
 
     .col-amount {
-      .coin { width: 20px; height: 20px; line-height: 20px; font-size: 14px; }
-      .value { font-size: 10px; }
+      .coin {
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+        font-size: 14px;
+      }
+
+      .value {
+        font-size: 10px;
+      }
     }
   }
 }
 
 .LoanPage {
   padding: 20px;
+
   .LoanApplicationForm {
     .Form-twoInputs {
       display: grid;
@@ -323,6 +350,7 @@
 .LoanApplicationForm .MyApplications .OrderList-body .OrderList-row {
   border-bottom: 1px solid var(--control-border);
 }
+
 .LoanApplicationForm .MyApplications .OrderList-body .OrderList-row:last-child {
   border-bottom: none;
 }
@@ -338,6 +366,7 @@
   width: 28px;
   height: 28px;
 }
+
 .LoanApplicationForm .MyApplications .platform-logo {
   width: 28px;
   height: 28px;
@@ -352,10 +381,12 @@
   object-fit: contain;
   margin-right: 6px;
 }
+
 .LoanApplicationForm .MyApplications .currency-text {
   display: inline-block;
   margin-right: 6px;
 }
+
 .LoanApplicationForm .MyApplications .amount .value {
   font-weight: 700;
 }
@@ -374,8 +405,8 @@
 // Custom platform selector (tournament style)
 .LoanPlatformSelector {
   position: relative;
-  margin-bottom: 20px;
 }
+
 .LoanPlatformSelector-dropdown {
   border: 1px solid var(--control-border);
   border-radius: 6px;
@@ -387,29 +418,90 @@
   justify-content: space-between;
   transition: border-color 0.2s ease;
 }
+
 .LoanPlatformSelector-dropdown:hover {
   border-color: var(--control-border-color, #5b6b8c);
 }
-.LoanPlatformSelector-selected { display: flex; align-items: center; flex: 1; }
-.LoanPlatformSelector-info { display: flex; align-items: center; gap: 10px; }
-.LoanPlatformSelector-icon { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; }
-.PlatformIcon--small { width: 20px; height: 20px; font-size: 16px; }
-.PlatformIcon--medium { width: 24px; height: 24px; font-size: 20px; }
-.LoanPlatformSelector-name { font-weight: 600; }
-.LoanPlatformSelector-dropdownIcon { color: var(--muted-color); }
+
+.LoanPlatformSelector-selected {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.LoanPlatformSelector-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: 20px;
+}
+
+.LoanPlatformSelector-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+.PlatformIcon--small {
+  width: 20px;
+  height: 20px;
+  font-size: 16px;
+}
+
+.PlatformIcon--medium {
+  width: 24px;
+  height: 24px;
+  font-size: 20px;
+}
+
+.LoanPlatformSelector-name {
+  font-weight: 600;
+}
+
+.LoanPlatformSelector-dropdownIcon {
+  color: var(--muted-color);
+}
+
 .LoanPlatformSelector-dropdownMenu {
-  position: absolute; top: 100%; left: 0; right: 0;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
   background: var(--body-bg);
   border: 1px solid var(--control-border);
-  border-radius: 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-  z-index: 1000; margin-top: 6px; max-height: 240px; overflow-y: auto;
+  border-radius: 6px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  z-index: 1000;
+  margin-top: 6px;
+  max-height: 240px;
+  overflow-y: auto;
 }
+
 .LoanPlatformSelector-dropdownItem {
-  padding: 12px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: background-color 0.2s ease;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
-.LoanPlatformSelector-dropdownItem:hover { background: var(--control-bg); }
-.LoanPlatformSelector-dropdownItem + .LoanPlatformSelector-dropdownItem { border-top: 1px solid var(--control-border); }
-.LoanPlatformSelector-noData { color: var(--muted-color); cursor: default; font-style: italic; justify-content: center; }
+
+.LoanPlatformSelector-dropdownItem:hover {
+  background: var(--control-bg);
+}
+
+.LoanPlatformSelector-dropdownItem+.LoanPlatformSelector-dropdownItem {
+  border-top: 1px solid var(--control-border);
+}
+
+.LoanPlatformSelector-noData {
+  color: var(--muted-color);
+  cursor: default;
+  font-style: italic;
+  justify-content: center;
+}
 
 .ApprovalCards {
   display: grid;
@@ -432,7 +524,7 @@
       right: -50%;
       width: 200%;
       height: 200%;
-      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
       animation: shimmer 3s infinite;
     }
 
@@ -509,6 +601,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -523,6 +616,7 @@
 
 // 去除Flarum导航栏
 body.loan-standalone {
+
   #app-navigation,
   .App-navigation,
   #header,
@@ -603,4 +697,6 @@ body.loan-standalone {
   height: 17px;
 }
 
-.LoanRegisterButton .register-icon svg { display: block; }
+.LoanRegisterButton .register-icon svg {
+  display: block;
+}
