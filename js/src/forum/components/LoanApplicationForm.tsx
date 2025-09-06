@@ -51,6 +51,9 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
     console.log('[LoanApplicationForm] 传入的平台数据:', platforms);
 
     const selectedPlatform = platforms.find((p: LoanPlatform) => String(p.id()) === this.platformId());
+    const maxMonthsCfg = parseInt((app.forum.attribute('loanRepaymentMaxMonths') as any) || '6', 10);
+    const todayStr = this.formatDateYmdFromDate(new Date());
+    const maxDateStr = this.formatDateYmdFromDate(this.addMonths(new Date(), maxMonthsCfg));
     console.log('[LoanApplicationForm] 选中的平台:', selectedPlatform);
 
     return (
@@ -95,10 +98,13 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
             <input
               className="FormControl"
               type="date"
+              min={todayStr}
+              max={maxDateStr}
               value={this.repaymentDate()}
               oninput={(e: InputEvent) => this.repaymentDate((e.target as HTMLInputElement).value)}
               placeholder="请选择还款日期"
             />
+            <div className="helpText">请输入{maxMonthsCfg}个月内还款日期</div>
             <Button
               className="Button Button--primary"
               loading={this.loading}
@@ -354,6 +360,13 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
     if (!dateStr) return null;
     const d = new Date(dateStr);
     if (isNaN(d.getTime())) return null;
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
+  private formatDateYmdFromDate(d: Date): string {
     const yyyy = d.getFullYear();
     const mm = String(d.getMonth() + 1).padStart(2, '0');
     const dd = String(d.getDate()).padStart(2, '0');
