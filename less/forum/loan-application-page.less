@@ -1,0 +1,33 @@
+// Page-level styles for Loan Application
+
+.LoanPage {
+    padding: 20px;
+
+    .LoanApplicationForm {
+        .Form-twoInputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+
+            @media @phone {
+                grid-template-columns: 1fr;
+            }
+        }
+    }
+}
+
+// less/forum.less
+.LoanApplicationPage {
+    padding: 20px 0;
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    h2 {
+        font-size: 28px;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+}

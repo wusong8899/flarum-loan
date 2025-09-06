@@ -1,0 +1,51 @@
+// Register button (purple with play icon)
+
+// 注册按钮（紫色，含播放图标）
+.LoanRegisterButton {
+    border: none;
+    color: #fff;
+    background-color: #6c2dff; // neon purple-like
+    user-select: none;
+    text-decoration: none;
+    cursor: pointer;
+    appearance: none;
+    box-sizing: border-box;
+    border-radius: 10px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    transform: scale(1);
+    transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.2s ease, opacity 0.2s ease;
+    font-size: 16px;
+    line-height: 1;
+    position: relative;
+    padding: 0 16px;
+    height: 54px;
+}
+
+.LoanRegisterButton:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 16px rgba(108, 45, 255, 0.35);
+}
+
+.LoanRegisterButton:active {
+    transform: scale(0.98);
+}
+
+.LoanRegisterButton[disabled],
+.LoanRegisterButton.is-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.LoanRegisterButton .register-icon {
+    display: inline-flex;
+    width: 17px;
+    height: 17px;
+}
+
+.LoanRegisterButton .register-icon svg {
+    display: block;
+}
