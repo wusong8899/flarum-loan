@@ -1,4 +1,5 @@
 import Component from 'flarum/common/Component';
+import Button from 'flarum/common/components/Button';
 import app from 'flarum/forum/app';
 import LoanApplicationForm from './LoanApplicationForm';
 import ApprovedApplicationsList from './ApprovedApplicationsList';
@@ -14,7 +15,6 @@ export default class LoanApplicationPage extends Component {
   private virtualApprovals: LoanVirtualApproval[] = [];
 
   oninit(vnode: Vnode) {
-    console.log('[LoanApplicationPage] 页面组件初始化开始', vnode);
     super.oninit(vnode);
 
     this.loading = true;
@@ -22,14 +22,10 @@ export default class LoanApplicationPage extends Component {
     this.approvedApplications = [];
     this.virtualApprovals = [];
 
-    console.log('[LoanApplicationPage] 属性设置完成，开始加载数据');
     this.loadData();
   }
 
   async loadData(): Promise<void> {
-    console.log('[LoanApplicationPage] 开始加载页面数据...');
-
-    console.log('[LoanApplicationPage] 发起并行API请求...');
 
     // 使用 Promise.allSettled 来处理各个请求，即使某个失败也不影响其他
     const results = await Promise.allSettled([
@@ -46,7 +42,6 @@ export default class LoanApplicationPage extends Component {
         if (!isValid) console.warn('[LoanApplicationPage] 发现null平台:', p);
         return isValid;
       }) : [];
-      console.log('[LoanApplicationPage] 平台加载成功，数量:', this.platforms.length);
 
       // 详细检查每个平台
       this.platforms.forEach((platform, index) => {
@@ -85,19 +80,11 @@ export default class LoanApplicationPage extends Component {
         if (!isValid) console.warn('[LoanApplicationPage] 发现null虚拟批准:', v);
         return isValid;
       }) : [];
-      console.log('[LoanApplicationPage] 虚拟审批加载成功，数量:', this.virtualApprovals.length);
     } else {
       console.error('[LoanApplicationPage] 加载虚拟审批失败:', results[2].reason);
       this.virtualApprovals = [];
     }
 
-    console.log('[LoanApplicationPage] 最终数据汇总:', {
-      platformsCount: this.platforms.length,
-      approvedAppsCount: this.approvedApplications.length,
-      virtualApprovalsCount: this.virtualApprovals.length
-    });
-
-    console.log('[LoanApplicationPage] 数据加载完成，设置loading为false');
     this.loading = false;
     m.redraw();
   }
@@ -108,11 +95,24 @@ export default class LoanApplicationPage extends Component {
   onremove() {
     document.body.classList.remove('loan-standalone');
   }
+  private goBack() {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      const home = (app.forum.attribute('baseUrl') as string) || '/';
+      window.location.href = home;
+    }
+  }
   view() {
     if (this.loading) return <div className="LoanPage">加载中...</div>;
 
     return (
       <div className="LoanPage">
+        <div className="LoanBackButton">
+          <Button className="Button Button--link" icon="fas fa-arrow-left" onclick={this.goBack.bind(this)}>
+            返回
+          </Button>
+        </div>
         <h2>贷款申请</h2>
         <LoanApplicationForm
           platforms={this.platforms}

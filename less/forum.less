@@ -521,6 +521,7 @@
   }
 }
 
+// 去除Flarum导航栏
 body.loan-standalone {
   #app-navigation,
   .App-navigation,
@@ -534,5 +535,29 @@ body.loan-standalone {
   .App,
   .App-content {
     padding-top: 0 !important;
+  }
+
+  // 固定左上角返回按钮（仅在本页面渲染）
+  .LoanBackButton {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 1001;
+
+    .Button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 6px;
+      background: var(--control-bg);
+      border: 1px solid var(--control-border);
+      color: inherit;
+    }
+
+    .Button:hover {
+      background: var(--control-bg-hover, #eef1f5);
+    }
   }
 }

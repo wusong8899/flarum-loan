@@ -67,7 +67,7 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
                 className="Button"
                 onclick={this.openSponsorLink.bind(this)}
               >
-                注册赞助平台
+                注册平台
               </Button>
             )}
           </div>
@@ -75,12 +75,12 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
 
         <div className="Form-twoInputs">
           <div className="Form-group">
-            <label>请输入赞助平台账号</label>
+            <label>注册账号</label>
             <input
               className="FormControl"
               value={this.sponsorAccount()}
               oninput={(e: InputEvent) => this.sponsorAccount((e.target as HTMLInputElement).value)}
-              placeholder="例如：平台用户名/ID"
+              placeholder="请输入贷款账号ID"
             />
           </div>
           <div className="Form-group">
