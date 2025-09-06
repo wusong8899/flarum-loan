@@ -101,7 +101,13 @@ export default class LoanApplicationPage extends Component {
     this.loading = false;
     m.redraw();
   }
+  oncreate() {
+    document.body.classList.add('loan-standalone');
+  }
 
+  onremove() {
+    document.body.classList.remove('loan-standalone');
+  }
   view() {
     if (this.loading) return <div className="LoanPage">加载中...</div>;
 

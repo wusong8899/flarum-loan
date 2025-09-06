@@ -19,6 +19,7 @@
         "dev:forum": "vite -c vite.config.forum.mts build --mode development",
         "dev:watch": "vite -c vite.config.admin.mts build --watch --mode development && vite -c vite.config.forum.mts build --watch --mode development",
         "build": "vite -c vite.config.admin.mts build --mode production && vite -c vite.config.forum.mts build --mode production",
+        "build:watch": "vite -c vite.config.admin.mts build --watch --mode production && vite -c vite.config.forum.mts build --watch --mode production",
         "lint": "oxlint .",
         "lint:fix": "oxlint . --fix",
         "analyze": "cross-env ANALYZER=true yarn run build",
