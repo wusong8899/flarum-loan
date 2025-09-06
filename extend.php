@@ -18,8 +18,6 @@ return [
         ->js(__DIR__ . '/js/dist/admin.js')
         ->css(__DIR__ . '/less/admin.less'),
 
-    new Extend\Locales(__DIR__ . '/locale'),
-
     // 将后台设置的 Logo URL 序列化到论坛前端属性 loanLogoUrl
     (new Extend\Settings())
         ->serializeToForum('loanLogoUrl', 'wusong8899-loan.logo_url')
