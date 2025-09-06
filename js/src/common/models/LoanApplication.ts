@@ -4,7 +4,7 @@ import LoanPlatform from './LoanPlatform';
 
 export default class LoanApplication extends Model {
   sponsorAccount = Model.attribute<string>('sponsorAccount');
-  applicantAccount = Model.attribute<string>('applicantAccount');
+  repaymentDate = Model.attribute<string>('repaymentDate');
   status = Model.attribute<string>('status');
   approvedAmount = Model.attribute<number>('approvedAmount');
   createdAt = Model.attribute<Date>('createdAt');

@@ -3,7 +3,7 @@ import ExtensionPage from 'flarum/admin/components/ExtensionPage';
 import app from 'flarum/admin/app';
 import PlatformManager from './PlatformManager';
 import ApplicationsManager from './ApplicationsManager';
-import m,{Vnode} from 'mithril';
+import m, { Vnode } from 'mithril';
 
 export default class LoanSettingsPage extends ExtensionPage {
   private activeTab: 'platforms' | 'applications' = 'platforms';
@@ -27,6 +27,17 @@ export default class LoanSettingsPage extends ExtensionPage {
                 value={this.setting('wusong8899-loan.logo_url')()}
                 oninput={(e: InputEvent) => this.setting('wusong8899-loan.logo_url')((e.target as HTMLInputElement).value)}
                 placeholder="https://example.com/logo.png"
+              />
+            </div>
+            <div className="Form-group">
+              <label>还款日期最大月数</label>
+              <input
+                className="FormControl"
+                type="number"
+                min="1"
+                value={this.setting('wusong8899-loan.repayment_max_months')()}
+                oninput={(e: InputEvent) => this.setting('wusong8899-loan.repayment_max_months')((e.target as HTMLInputElement).value)}
+                placeholder="例如：6"
               />
             </div>
             <div className="Form-group">
@@ -70,7 +81,7 @@ export default class LoanSettingsPage extends ExtensionPage {
       });
       app.alerts.show({ type: 'success' }, '已清空申请与虚拟审批数据');
     } catch (e) {
-      app.alerts.show({ type: 'error' }, '清空失败 '+e);
+      app.alerts.show({ type: 'error' }, '清空失败 ' + e);
     }
   }
 }

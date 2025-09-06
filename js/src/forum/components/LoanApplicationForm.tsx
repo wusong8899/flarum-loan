@@ -10,13 +10,13 @@ import LoanPlatform from '../../common/models/LoanPlatform';
 
 type LoanApplicationFormAttrs = {
   platforms: LoanPlatform[];
-  onSubmit: (payload: { platform_id: string; sponsor_account?: string; applicant_account?: string }) => Promise<void> | void;
+  onSubmit: (payload: { platform_id: string; sponsor_account?: string; repayment_date?: string }) => Promise<void> | void;
 };
 
 export default class LoanApplicationForm extends Component<LoanApplicationFormAttrs> {
   private platformId: any;
   private sponsorAccount: any;
-  private applicantAccount: any;
+  private repaymentDate: any;
   private loading: boolean = false;
   private listLoading: boolean = false;
   private myApplications: LoanApplication[] = [];
@@ -27,7 +27,7 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
 
     this.platformId = Stream('');
     this.sponsorAccount = Stream('');
-    this.applicantAccount = Stream('');
+    this.repaymentDate = Stream('');
     this.loading = false;
     this.listLoading = true;
     this.myApplications = [];
@@ -43,7 +43,7 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
       myApplicationsCount: this.myApplications.length,
       platformId: this.platformId(),
       sponsorAccount: this.sponsorAccount(),
-      applicantAccount: this.applicantAccount()
+      repaymentDate: this.repaymentDate()
     });
 
     const platforms = (this.attrs as LoanApplicationFormAttrs).platforms || [];
@@ -84,17 +84,18 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
             />
           </div>
           <div className="Form-group">
-            <label>申请账号</label>
+            <label>还款日期</label>
             <input
               className="FormControl"
-              value={this.applicantAccount()}
-              oninput={(e: InputEvent) => this.applicantAccount((e.target as HTMLInputElement).value)}
-              placeholder="例如：论坛或应用内账号"
+              type="date"
+              value={this.repaymentDate()}
+              oninput={(e: InputEvent) => this.repaymentDate((e.target as HTMLInputElement).value)}
+              placeholder="请选择还款日期"
             />
             <Button
               className="Button Button--primary"
               loading={this.loading}
-              disabled={!this.platformId() || !this.sponsorAccount() || !this.applicantAccount()}
+              disabled={!this.platformId() || !this.sponsorAccount() || !this.repaymentDate()}
               onclick={this.submit.bind(this)}
             >
               提交申请
@@ -119,7 +120,7 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
               <div className="OrderList-header">
                 <span>平台</span>
                 <span>赞助账号</span>
-                <span>申请账号</span>
+                <span>还款日期</span>
                 <span>状态</span>
                 <span>批准额度</span>
               </div>
@@ -149,13 +150,13 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
       await (this.attrs as LoanApplicationFormAttrs).onSubmit({
         platform_id: this.platformId(),
         sponsor_account: this.sponsorAccount(),
-        applicant_account: this.applicantAccount()
+        repayment_date: this.repaymentDate()
       });
 
       // 重置表单
       this.platformId('');
       this.sponsorAccount('');
-      this.applicantAccount('');
+      this.repaymentDate('');
 
       // 重新加载我的申请记录
       await this.loadMyApplications();
@@ -217,7 +218,7 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
             platform: app.platform?.(),
             platformMethod: typeof app.platform,
             sponsorAccount: app.sponsorAccount?.(),
-            applicantAccount: app.applicantAccount?.(),
+            repaymentDate: app.repaymentDate?.(),
             status: app.status?.(),
             approvedAmount: app.approvedAmount?.()
           });
@@ -250,7 +251,7 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
       hasId: typeof appModel.id,
       hasPlatform: typeof appModel.platform,
       hasSponsorAccount: typeof appModel.sponsorAccount,
-      hasApplicantAccount: typeof appModel.applicantAccount,
+      hasRepaymentDate: typeof (appModel as any).repaymentDate,
       hasStatus: typeof appModel.status,
       hasApprovedAmount: typeof appModel.approvedAmount
     });
@@ -274,7 +275,7 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
     const currencyImg = platform && platform.currencyImageUrl ? platform.currencyImageUrl() : '';
 
     const sponsor = appModel.sponsorAccount?.() || '-';
-    const applicant = appModel.applicantAccount?.() || '-';
+    const repayment = appModel.repaymentDate?.() || '';
     const statusText = this.statusText(appModel.status ? appModel.status() : undefined);
     const amount = appModel.approvedAmount?.();
 
@@ -283,7 +284,7 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
       platformLogo,
       currencyImg,
       sponsor,
-      applicant,
+      repayment,
       statusText,
       amount
     });
@@ -297,7 +298,7 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
           <span className="platform-name">{platformName}</span>
         </div>
         <div className="col-sponsor">{sponsor || '-'}</div>
-        <div className="col-applicant">{applicant || '-'}</div>
+        <div className="col-repayment">{this.renderRepaymentCell(repayment)}</div>
         <div className="col-status">{statusText || '-'}</div>
         <div className="col-amount">
           {typeof amount === 'number' ? (
@@ -331,5 +332,30 @@ export default class LoanApplicationForm extends Component<LoanApplicationFormAt
 
   private formatAmount(num: number) {
     return Number(num).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  private renderRepaymentCell(dateStr?: string) {
+    const maxMonths = parseInt((app.forum.attribute('loanRepaymentMaxMonths') as any) || '6', 10);
+    const isOver = this.isOverdueLong(dateStr, maxMonths);
+    if (!dateStr) return <span>-</span>;
+    return isOver ? <span className="overdue">未还款</span> : <span>{dateStr}</span>;
+  }
+
+  private isOverdueLong(dateStr?: string, maxMonths?: number): boolean {
+    if (!dateStr) return false;
+    const parsed = new Date(dateStr);
+    if (isNaN(parsed.getTime())) return false;
+    const now = new Date();
+    if (!maxMonths || maxMonths <= 0) return now > parsed; // fallback
+    const threshold = this.addMonths(parsed, maxMonths);
+    return now > threshold;
+  }
+
+  private addMonths(date: Date, months: number): Date {
+    const d = new Date(date.getTime());
+    const day = d.getDate();
+    d.setMonth(d.getMonth() + months);
+    if (d.getDate() < day) d.setDate(0);
+    return d;
   }
 }

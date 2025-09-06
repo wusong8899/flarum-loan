@@ -41,7 +41,7 @@ export default class ApplicationsManager extends Component {
                 <th>用户</th>
                 <th>平台</th>
                 <th>赞助账号</th>
-                <th>申请账号</th>
+                <th>还款日期</th>
                 <th>状态</th>
                 <th>批准额度</th>
                 <th>操作</th>
@@ -53,7 +53,7 @@ export default class ApplicationsManager extends Component {
                   <td>{(appModel.user() && (appModel.user() as any).displayName) ? (appModel.user() as any).displayName() : '-'}</td>
                   <td>{(appModel.platform() && (appModel.platform() as any).name) ? (appModel.platform() as any).name() : '-'}</td>
                   <td>{appModel.sponsorAccount?.() || '-'}</td>
-                  <td>{appModel.applicantAccount?.() || '-'}</td>
+                  <td>{this.renderRepaymentCell(appModel.repaymentDate?.())}</td>
                   <td>{appModel.status()}</td>
                   <td>{appModel.approvedAmount() || '-'}</td>
                   <td>
@@ -112,6 +112,32 @@ export default class ApplicationsManager extends Component {
     }
   }
 }
+
+// Helpers
+function isOverdueLong(dateStr?: string, maxMonths?: number): boolean {
+  if (!dateStr) return false;
+  const parsed = new Date(dateStr);
+  if (isNaN(parsed.getTime())) return false;
+  const now = new Date();
+  if (!maxMonths || maxMonths <= 0) return now > parsed;
+  const threshold = addMonths(parsed, maxMonths);
+  return now > threshold;
+}
+
+function addMonths(date: Date, months: number): Date {
+  const d = new Date(date.getTime());
+  const day = d.getDate();
+  d.setMonth(d.getMonth() + months);
+  if (d.getDate() < day) d.setDate(0);
+  return d;
+}
+
+(ApplicationsManager.prototype as any).renderRepaymentCell = function(dateStr?: string) {
+  const maxMonths = parseInt((app.forum.attribute('loanRepaymentMaxMonths') as any) || '6', 10);
+  const over = isOverdueLong(dateStr, maxMonths);
+  if (!dateStr) return m('span', '-', {} as any);
+  return over ? m('span', { className: 'overdue' } as any, '未还款') : m('span', {} as any, dateStr);
+};
 
 
 

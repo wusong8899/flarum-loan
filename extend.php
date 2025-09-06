@@ -22,7 +22,8 @@ return [
 
     // 将后台设置的 Logo URL 序列化到论坛前端属性 loanLogoUrl
     (new Extend\Settings())
-        ->serializeToForum('loanLogoUrl', 'wusong8899-loan.logo_url'),
+        ->serializeToForum('loanLogoUrl', 'wusong8899-loan.logo_url')
+        ->serializeToForum('loanRepaymentMaxMonths', 'wusong8899-loan.repayment_max_months'),
 
     (new Extend\Routes('api'))
         // 平台管理

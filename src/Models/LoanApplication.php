@@ -9,9 +9,9 @@ class LoanApplication extends AbstractModel
 {
     protected $table = 'loan_applications';
 
-    protected $fillable = ['user_id', 'platform_id', 'sponsor_account', 'applicant_account', 'status', 'approved_amount'];
+    protected $fillable = ['user_id', 'platform_id', 'sponsor_account', 'repayment_date', 'status', 'approved_amount'];
 
-    protected $dates = ['created_at', 'updated_at', 'reviewed_at'];
+    protected $dates = ['created_at', 'updated_at', 'reviewed_at', 'repayment_date'];
 
     public function user()
     {
