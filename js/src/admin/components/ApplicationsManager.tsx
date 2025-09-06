@@ -71,6 +71,20 @@ export default class ApplicationsManager extends Component {
     );
   }
 
+  private renderRepaymentCell(dateStr?: string) {
+    const maxMonths = parseInt((app.forum.attribute('loanRepaymentMaxMonths') as any) || '6', 10);
+    const over = isOverdueLong(dateStr, maxMonths);
+    if (!dateStr) return <span>-</span>;
+    if (over) return <span className="overdue">未还款</span>;
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return <span>{dateStr}</span>;
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    const formatted = `${yyyy}-${mm}-${dd}`;
+    return <span>{formatted}</span>;
+  }
+
   async review(appModel: LoanApplication, status: 'approved' | 'rejected'): Promise<void> {
     const attrs: any = { status };
 
@@ -132,12 +146,6 @@ function addMonths(date: Date, months: number): Date {
   return d;
 }
 
-(ApplicationsManager.prototype as any).renderRepaymentCell = function(dateStr?: string) {
-  const maxMonths = parseInt((app.forum.attribute('loanRepaymentMaxMonths') as any) || '6', 10);
-  const over = isOverdueLong(dateStr, maxMonths);
-  if (!dateStr) return m('span', '-', {} as any);
-  return over ? m('span', { className: 'overdue' } as any, '未还款') : m('span', {} as any, dateStr);
-};
 
 
 
