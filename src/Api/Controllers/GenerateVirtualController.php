@@ -92,6 +92,8 @@ class GenerateVirtualController extends AbstractCreateController
             '青龙'
         ];
         $styles = ['adventurer', 'micah', 'bottts-neutral', 'notionists-neutral', 'big-ears-neutral'];
+        // 固定可选额度集合：18/28/38/48/58/68/88/188/288/388/688/1888/2888/6666/8888
+        $allowedAmounts = [18, 28, 38, 48, 58, 68, 88, 188, 288, 388, 688, 1888, 2888, 6666, 8888];
 
         for ($i = 0; $i < $count; $i++) {
             $adj1 = $faker->randomElement($adjectives);
@@ -112,7 +114,7 @@ class GenerateVirtualController extends AbstractCreateController
                 'platform_id' => $platformId,
                 'fake_username' => $nickname,
                 'fake_avatar_url' => $avatarUrl,
-                'amount' => rand(18, 88888)
+                'amount' => $faker->randomElement($allowedAmounts)
             ]);
         }
 

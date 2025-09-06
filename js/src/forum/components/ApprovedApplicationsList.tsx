@@ -154,7 +154,7 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
           ) : (
             <span className="coin">¥</span>
           )}
-          <span className="value">{this.formatAmount(approval.amount, 2)}</span>
+          <span className="value">{this.formatAmount(approval.amount)}</span>
         </div>
       </div>
     );
@@ -182,7 +182,8 @@ export default class ApprovedApplicationsList extends Component<ApprovedApplicat
   }
 
   formatAmount(num: number, fixed?: number) {
-    if (fixed !== undefined) return Number(num).toLocaleString(undefined, { minimumFractionDigits: fixed, maximumFractionDigits: fixed });
-    return Number(num).toLocaleString();
+    // 展示为整数，去除小数点
+    const integer = Math.trunc(Number(num));
+    return integer.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
   }
 }
